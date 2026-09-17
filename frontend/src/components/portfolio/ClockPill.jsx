@@ -21,7 +21,7 @@ export default function ClockPill({ testid }) {
   return (
     <span
       data-testid={testid}
-      className="mono hidden sm:inline-flex items-center gap-2 border-2 border-foreground bg-background px-3 py-1.5 text-[11px] tracking-widest text-[#00FF66]"
+      className="mono hidden sm:inline-flex items-center gap-2 border-2 border-foreground bg-background px-3 py-1.5 text-[11px] tracking-widest text-foreground dark:text-[#00FF66]"
     >
       <span className="h-2 w-2 rounded-full bg-accent animate-pulse-dot" />
       TARLAC {time} GMT+8
