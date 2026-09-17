@@ -1,0 +1,301 @@
+{
+  "project_name": "Romano Galvan - Vibe Coder Portfolio",
+  "app_type": "portfolio",
+  "persona": "E1 The Anti-AI Designer",
+  "brand_identity": {
+    "name": "Romano Galvan",
+    "title": "Vibe Coder / Freelance Web Developer",
+    "positioning_statement": "Vibe Coder — Crafting high-energy, motion-led, ultra-fast web experiences from Bamban, Tarlac, Philippines.",
+    "location": "Bamban, Tarlac, Philippines (GMT+8)",
+    "contact": {
+      "email": "rvg.webdd@gmail.com",
+      "whatsapp": "+63 991 684 8388",
+      "whatsapp_url": "https://wa.me/639916848388?text=Hi%20Romano%2C%20I%27m%20interested%20in%20building%20a%20high-performance%20web%20project."
+    }
+  },
+  "design_archetype": "Neo-Brutalist Kinetic Minimalist",
+  "theme_strategy": {
+    "support": "Instant Light/Dark Mode Toggle with CSS variables and class-based state sync",
+    "light_mode": {
+      "background": "#F4F3EF",
+      "foreground": "#0A0A0C",
+      "card_bg": "#FFFFFF",
+      "card_border": "#0A0A0C",
+      "accent": "#FF3E00",
+      "accent_foreground": "#FFFFFF",
+      "muted": "#E5E3DC",
+      "muted_foreground": "#52525B",
+      "grid_border": "rgba(10, 10, 12, 0.12)",
+      "neo_shadow": "4px 4px 0px #0A0A0C"
+    },
+    "dark_mode": {
+      "background": "#0A0A0C",
+      "foreground": "#F4F3EF",
+      "card_bg": "#121216",
+      "card_border": "#27272A",
+      "accent": "#00FF66",
+      "accent_foreground": "#0A0A0C",
+      "muted": "#1E1E24",
+      "muted_foreground": "#A1A1AA",
+      "grid_border": "rgba(244, 243, 239, 0.12)",
+      "neo_shadow": "4px 4px 0px #00FF66"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "heading": "'Cabinet Grotesk', 'Syne', 'Outfit', sans-serif",
+      "body": "'Plus Jakarta Sans', 'DM Sans', sans-serif",
+      "mono": "'JetBrains Mono', 'Fira Code', monospace"
+    },
+    "font_sources": [
+      "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Syne:wght@700;800&display=swap"
+    ],
+    "scale": {
+      "hero_h1": "text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[0.95]",
+      "section_h2": "text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight",
+      "card_h3": "text-xl sm:text-2xl font-bold tracking-tight",
+      "subheading": "text-lg sm:text-xl font-medium text-muted-foreground",
+      "body": "text-base sm:text-lg leading-relaxed",
+      "mono_label": "font-mono text-xs sm:text-sm uppercase tracking-[0.2em] text-accent font-semibold"
+    }
+  },
+  "visual_enhancers": {
+    "neo_brutalist_elements": [
+      "Exposed 1px/2px grid stroke borders with structural grid alignment",
+      "Offset hard shadow boxes (`shadow-[4px_4px_0px_0px_#0A0A0C]` in light, green/accent in dark)",
+      "Numbered manifesto tags (`[01]`, `[02]`, `[03]`) in mono typeface",
+      "High-contrast pill badges with hover state translations (`-translate-y-1 -translate-x-1`)",
+      "Subtle CRT scanline overlay or noise grain effect via lightweight CSS opacity"
+    ],
+    "motion_language": {
+      "smooth_scroll": "Lenis momentum smooth scrolling engine",
+      "hero_reveal": "Masked line-by-line kinetic headline slide-up reveal with Framer Motion",
+      "scroll_animations": "Staggered scroll-triggered fade-and-rise animations using Framer Motion viewport triggers",
+      "marquee": "Continuous slow kinetic text marquee ribbon with outline & filled text blend",
+      "interactive_cards": "Hover tilt + magnetic button effect + hard shadow expand on hover"
+    }
+  },
+  "layout_sections": [
+    {
+      "section_id": "header_nav",
+      "name": "Floating Kinetic Navigation Bar",
+      "description": "Sticky top bar with glassmorphic backdrop, brand moniker 'ROMANO GALVAN // VIBE CODER', Bamban GMT+8 live status clock, quick nav links, theme switcher, and WhatsApp quick CTA.",
+      "components": [
+        "Brand Moniker badge",
+        "Live Philippines GMT+8 digital clock indicator with pulsating green dot",
+        "Nav links: Services, Manifesto, Work, Contact",
+        "Dark/Light Mode Toggle Button with smooth icon rotation",
+        "WhatsApp CTA pill button with direct link"
+      ]
+    },
+    {
+      "section_id": "hero",
+      "name": "Kinetic Hero Landing",
+      "description": "High-impact kinetic hero with masked line-by-line headline reveal, live availability badge, 3D interactive interactive tilt container, positioning statement, and dual CTAs.",
+      "content": {
+        "eyebrow": "[ AVAILABLE FOR FREELANCE & CONTRACT ] // BASED IN TARLAC, PH",
+        "headline_line_1": "I BUILD VIBEY,",
+        "headline_line_2": "HIGH-VELOCITY",
+        "headline_line_3": "WEB EXPERIENCES.",
+        "description": "Freelance Web Developer specializing in ultra-fast, motion-driven, Awwwards-caliber digital products for bold founders and modern brands.",
+        "primary_cta": "Start a Project (Email)",
+        "secondary_cta": "WhatsApp Direct Chat"
+      }
+    },
+    {
+      "section_id": "marquee",
+      "name": "Kinetic Texture Editorial Marquee",
+      "description": "Slow continuous horizontal streaming text showcasing core capabilities and vibe coding philosophy with contrasting filled and stroke typography.",
+      "marquee_items": [
+        "VIBE CODING",
+        "FULL-STACK WEB DEV",
+        "NEO-BRUTALIST DESIGN",
+        "FRAMER MOTION",
+        "FAST PERFORMANCE",
+        "AWD-LEVEL INTERACTION",
+        "BAMBAN, TARLAC PH"
+      ]
+    },
+    {
+      "section_id": "services",
+      "name": "Services & Capabilities Matrix",
+      "description": "Neo-brutalist high-density grid showing core freelance web development offerings with metric tags, tech stack badges, and interactive deliverables drawer.",
+      "cards": [
+        {
+          "number": "01",
+          "title": "Custom Vibe Coding & Web Apps",
+          "desc": "BespoKe React & Next.js web applications built with pixel precision, snappy reactivity, and modern state architecture.",
+          "tags": ["React", "Next.js", "Tailwind CSS", "TypeScript", "FastAPI"]
+        },
+        {
+          "number": "02",
+          "title": "Kinetic Landing Pages & Portfolios",
+          "desc": "High-converting, award-worthy marketing sites with kinetic motion, Lenis smooth scroll, and immersive micro-interactions.",
+          "tags": ["Framer Motion", "Lenis", "GSAP", "Awwwards Style", "SEO Ready"]
+        },
+        {
+          "number": "03",
+          "title": "Performance & Frontend Refactoring",
+          "desc": "Transforming heavy, sluggish web apps into light-speed digital products with sub-second page loads and zero layout shifts.",
+          "tags": ["Lighthouse 100", "Core Web Vitals", "Code Splitting", "SEO Tuning"]
+        },
+        {
+          "number": "04",
+          "title": "UI/UX System Design & Prototyping",
+          "desc": "High-trust design systems, dark/light theme architectures, accessible UI components, and tactile neo-brutalist components.",
+          "tags": ["Shadcn/UI", "Design Systems", "Tailwind Variables", "WCAG AA"]
+        }
+      ]
+    },
+    {
+      "section_id": "about_manifesto",
+      "name": "Manifesto & Background Chapters",
+      "description": "Numbered chapter-based section outlining Romano Galvan's journey, philosophy on 'Vibe Coding', working style, and commitment to fast delivery.",
+      "chapters": [
+        {
+          "chapter": "#01",
+          "title": "The Vibe Coding Ethos",
+          "text": "Coding isn't just typing logic; it's orchestrating rhythm, feedback, and atmosphere. I combine deep engineering logic with high-taste design sensibilities so every click feels tactile and alive."
+        },
+        {
+          "chapter": "#02",
+          "title": "Rooted in Bamban, Building Worldwide",
+          "text": "Operating out of Bamban, Tarlac, Philippines. Working asynchronously with global clients across US, Europe, and Asia-Pacific timezones with transparent communication and relentless focus on outcomes."
+        },
+        {
+          "chapter": "#03",
+          "title": "Speed, Security & Pure Craft",
+          "text": "No bloated frameworks or unnecessary weight. Built with clean React architecture, GPU-accelerated motion, rigid security practices, and instant loading speeds."
+        }
+      ]
+    },
+    {
+      "section_id": "projects",
+      "name": "Featured Works & Outcomes",
+      "description": "Grid of graphic/typographic CSS-based project cards highlighting key case studies, quantifiable outcomes, live interactive modals, and tech tags.",
+      "projects_data": [
+        {
+          "id": "project-1",
+          "title": "KINETIC - AI Workflow Engine",
+          "category": "Web Application",
+          "outcome": "+320% User Engagement / 0.4s First Contentful Paint",
+          "desc": "High-speed dashboard and landing suite for an autonomous AI workflow orchestrator.",
+          "gradient_theme": "from-orange-500/20 via-zinc-900 to-black",
+          "accent_color": "#FF3E00",
+          "tags": ["React", "FastAPI", "Tailwind", "Framer Motion"]
+        },
+        {
+          "id": "project-2",
+          "title": "PULSE - High-Frequency Web3 Terminal",
+          "category": "Fintech Platform",
+          "outcome": "$4.2M Transaction Volume / 99.99% Uptime",
+          "desc": "Dark-mode heavy real-time analytics interface with custom charting and neo-brutalist data cards.",
+          "gradient_theme": "from-emerald-500/20 via-zinc-900 to-black",
+          "accent_color": "#00FF66",
+          "tags": ["TypeScript", "Recharts", "Shadcn/UI", "Tailwind"]
+        },
+        {
+          "id": "project-3",
+          "title": "AURA - Digital Creative Agency",
+          "category": "Awwwards Portfolio Site",
+          "outcome": "Site of the Day Nominee / +180% Inbound Leads",
+          "desc": "Experimental agency website featuring kinetic typography, smooth momentum scroll, and interactive cursor physics.",
+          "gradient_theme": "from-purple-500/20 via-zinc-900 to-black",
+          "accent_color": "#A855F7",
+          "tags": ["Lenis", "Framer Motion", "CSS Grid", "React"]
+        },
+        {
+          "id": "project-4",
+          "title": "SOLARIS - Sustainable Energy Portal",
+          "category": "SaaS Platform",
+          "outcome": "-65% Bounce Rate / 100/100 Lighthouse Performance",
+          "desc": "Clean, eco-conscious dashboard tracking real-time solar grid output and carbon reduction metrics.",
+          "gradient_theme": "from-amber-500/20 via-zinc-900 to-black",
+          "accent_color": "#F59E0B",
+          "tags": ["React", "Tailwind CSS", "Recharts", "Lucide"]
+        }
+      ]
+    },
+    {
+      "section_id": "contact",
+      "name": "Direct Contact & WhatsApp Engine",
+      "description": "Interactive email contact form with client-side validation, direct WhatsApp click-to-chat integration, email copy button, and sticky floating CTA pill.",
+      "contact_methods": {
+        "email": "rvg.webdd@gmail.com",
+        "whatsapp": "+63 991 684 8388",
+        "whatsapp_formatted_link": "https://wa.me/639916848388?text=Hello%20Romano%2C%20I%20want%20to%20discuss%20a%20project!"
+      },
+      "form_fields": [
+        "name",
+        "email",
+        "budget_range",
+        "message"
+      ]
+    },
+    {
+      "section_id": "footer",
+      "name": "Footer & Timezone Clock",
+      "description": "High-impact neo-brutalist footer with huge typographic brand mark, timezone indicator, copyright info, and social links.",
+      "social_links": [
+        {"name": "GitHub", "url": "https://github.com"},
+        {"name": "LinkedIn", "url": "https://linkedin.com"},
+        {"name": "Twitter/X", "url": "https://twitter.com"},
+        {"name": "WhatsApp", "url": "https://wa.me/639916848388"}
+      ]
+    }
+  ],
+  "image_urls": [
+    {
+      "category": "developer_workspace",
+      "url": "https://images.pexels.com/photos/33637962/pexels-photo-33637962.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Developer setup with code editor and ambient lighting"
+    },
+    {
+      "category": "code_detail",
+      "url": "https://images.pexels.com/photos/907487/pexels-photo-907487.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Close-up code interface showing high performance code"
+    }
+  ],
+  "testing_attributes": {
+    "rule": "All interactive, navigation, form, modal, theme toggle, and CTA elements MUST contain specific kebab-case data-testid attributes.",
+    "required_test_ids": [
+      "data-testid='header-brand-logo'",
+      "data-testid='theme-toggle-button'",
+      "data-testid='nav-link-services'",
+      "data-testid='nav-link-manifesto'",
+      "data-testid='nav-link-work'",
+      "data-testid='nav-link-contact'",
+      "data-testid='hero-headline'",
+      "data-testid='hero-email-cta'",
+      "data-testid='hero-whatsapp-cta'",
+      "data-testid='marquee-ribbon'",
+      "data-testid='service-card-01'",
+      "data-testid='service-card-02'",
+      "data-testid='service-card-03'",
+      "data-testid='service-card-04'",
+      "data-testid='project-card-project-1'",
+      "data-testid='project-card-project-2'",
+      "data-testid='project-card-project-3'",
+      "data-testid='project-card-project-4'",
+      "data-testid='project-modal-trigger'",
+      "data-testid='contact-form-name-input'",
+      "data-testid='contact-form-email-input'",
+      "data-testid='contact-form-budget-select'",
+      "data-testid='contact-form-message-input'",
+      "data-testid='contact-form-submit-button'",
+      "data-testid='contact-whatsapp-direct-button'",
+      "data-testid='contact-copy-email-button'",
+      "data-testid='sticky-contact-cta-pill'",
+      "data-testid='footer-timezone-clock'"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Inject google fonts (Syne, Plus Jakarta Sans, JetBrains Mono) into public/index.html or top of index.css",
+    "Set up CSS variable theme system in index.css with .dark class toggling background/foreground/accent/border values",
+    "Install and integrate Lenis for smooth momentum scroll throughout the app (`yarn add @studio-freight/lenis` or custom smooth scroll wrapper)",
+    "Implement Sonner toast notification on contact form submission and email copy action",
+    "Ensure WhatsApp click-to-chat links open in new tab (`target='_blank' rel='noopener noreferrer'`) with encoded pre-filled message",
+    "Ensure mobile responsive nav drawer works seamlessly with theme toggle",
+    "Make sure every interactive element has data-testid attribute"
+  ]
+}

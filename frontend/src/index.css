@@ -1,0 +1,164 @@
+/* Fonts: Syne = bold display headings, Plus Jakarta Sans = body text,
+   JetBrains Mono = the little technical labels. Loaded once, used everywhere. */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    /* ------- LIGHT MODE palette (warm paper, ink black, signal orange) ------- */
+    :root {
+        --background: 48 18% 95%;
+        --foreground: 240 9% 4%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 9% 4%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 240 9% 4%;
+        --primary: 15 100% 50%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 48 15% 88%;
+        --secondary-foreground: 240 9% 4%;
+        --muted: 48 15% 88%;
+        --muted-foreground: 240 5% 34%;
+        --accent: 15 100% 50%;
+        --accent-foreground: 0 0% 100%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 9% 4%;
+        --input: 240 9% 4%;
+        --ring: 15 100% 50%;
+        --radius: 0rem;
+        /* Neo-brutalist extras: hard offset shadow + faint blueprint grid lines */
+        --neo-shadow: #0a0a0c;
+        --grid-line: rgba(10, 10, 12, 0.08);
+    }
+    /* ------- DARK MODE palette (deep ink, bone white, terminal green) ------- */
+    .dark {
+        --background: 240 9% 4%;
+        --foreground: 48 18% 95%;
+        --card: 240 9% 7%;
+        --card-foreground: 48 18% 95%;
+        --popover: 240 9% 7%;
+        --popover-foreground: 48 18% 95%;
+        --primary: 144 100% 50%;
+        --primary-foreground: 240 9% 4%;
+        --secondary: 240 9% 13%;
+        --secondary-foreground: 48 18% 95%;
+        --muted: 240 9% 13%;
+        --muted-foreground: 240 6% 65%;
+        --accent: 144 100% 50%;
+        --accent-foreground: 240 9% 4%;
+        --destructive: 0 63% 31%;
+        --destructive-foreground: 48 18% 95%;
+        --border: 240 6% 22%;
+        --input: 240 6% 28%;
+        --ring: 144 100% 50%;
+        --neo-shadow: #00ff66;
+        --grid-line: rgba(244, 243, 239, 0.07);
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        /* Colors fade smoothly when the theme flips, nothing jumps */
+        transition: background-color 0.4s ease, color 0.4s ease;
+    }
+}
+
+@layer utilities {
+    /* Display font for the huge headlines */
+    .font-heading {
+        font-family: 'Syne', sans-serif;
+    }
+    /* Little mono labels like [ 01 ] or // STATUS */
+    .mono {
+        font-family: 'JetBrains Mono', monospace;
+    }
+    /* The signature neo-brutalist hard shadow (no blur, just an offset block) */
+    .neo-shadow {
+        box-shadow: 4px 4px 0 0 var(--neo-shadow);
+    }
+    .neo-shadow-lg {
+        box-shadow: 8px 8px 0 0 var(--neo-shadow);
+    }
+    /* On hover the card lifts and the shadow grows — feels tactile */
+    .neo-lift {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .neo-lift:hover {
+        transform: translate(-3px, -3px);
+        box-shadow: 8px 8px 0 0 var(--neo-shadow);
+    }
+    /* Hollow outline text used inside the marquee */
+    .text-outline {
+        -webkit-text-stroke: 1.5px hsl(var(--foreground));
+        color: transparent;
+    }
+    /* Faint engineering-grid backdrop for big sections */
+    .grid-bg {
+        background-image:
+            linear-gradient(var(--grid-line) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 56px 56px;
+    }
+}
+
+/* The slow editorial marquee ribbon — pure CSS so it never stutters */
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+.animate-marquee {
+    animation: marquee 36s linear infinite;
+}
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+
+/* Blinking "available" status dot */
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+}
+.animate-pulse-dot {
+    animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@layer base {
+    [data-debug-wrapper="true"] {
+        display: contents !important;
+    }
+
+    [data-debug-wrapper="true"] > * {
+        margin-left: inherit;
+        margin-right: inherit;
+        margin-top: inherit;
+        margin-bottom: inherit;
+        padding-left: inherit;
+        padding-right: inherit;
+        padding-top: inherit;
+        padding-bottom: inherit;
+        column-gap: inherit;
+        row-gap: inherit;
+        gap: inherit;
+        border-left-width: inherit;
+        border-right-width: inherit;
+        border-top-width: inherit;
+        border-bottom-width: inherit;
+        border-left-style: inherit;
+        border-right-style: inherit;
+        border-top-style: inherit;
+        border-bottom-style: inherit;
+        border-left-color: inherit;
+        border-right-color: inherit;
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+    }
+}
