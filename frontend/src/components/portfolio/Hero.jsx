@@ -39,90 +39,89 @@ export default function Hero() {
         className="pointer-events-none absolute -top-24 -right-24 h-96 w-96 rounded-full bg-accent/20 blur-3xl"
       />
 
-      <div className="relative mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-        {/* ---------- Left: kinetic masked headline ---------- */}
-        <div>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mono mb-6 inline-flex items-center gap-2 border-2 border-foreground bg-background px-3 py-1.5 text-[10px] sm:text-xs tracking-[0.2em] text-accent neo-shadow"
-          >
-            <span className="h-2 w-2 rounded-full bg-accent animate-pulse-dot" />
-            [ AVAILABLE FOR FREELANCE & CONTRACT ]
-          </motion.p>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+        {/* Availability badge */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mono mb-6 inline-flex items-center gap-2 border-2 border-foreground bg-background px-3 py-1.5 text-[10px] sm:text-xs tracking-[0.2em] text-accent neo-shadow"
+        >
+          <span className="h-2 w-2 rounded-full bg-accent animate-pulse-dot" />
+          [ AVAILABLE FOR FREELANCE & CONTRACT ]
+        </motion.p>
 
-          <h1
-            data-testid="hero-headline"
-            className="font-heading text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] tracking-tight"
-          >
-            {HEADLINE.map((line, i) => (
-              // Each line sits in an overflow-hidden "mask"; the text slides up into view.
-              <span key={line} className="block overflow-hidden pb-1 lg:whitespace-nowrap">
-                <motion.span
-                  className="block"
-                  initial={{ y: "110%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.9, delay: 0.15 + i * 0.14, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {i === 2 ? (
-                    <>
-                      WEB <span className="text-accent">EXPERIENCES.</span>
-                    </>
-                  ) : (
-                    line
-                  )}
-                </motion.span>
-              </span>
-            ))}
-          </h1>
+        {/* ---------- Full-width kinetic masked headline ----------
+            Font size uses clamp(): it grows with the screen width but never
+            gets so big that the longest word spills off screen. */}
+        <h1
+          data-testid="hero-headline"
+          className="font-heading font-extrabold leading-[0.95] tracking-tight text-[clamp(1.6rem,6.5vw,5.5rem)] break-words"
+        >
+          {HEADLINE.map((line, i) => (
+            // Each line sits in an overflow-hidden "mask"; the text slides up into view.
+            <span key={line} className="block overflow-hidden pb-1">
+              <motion.span
+                className="block"
+                initial={{ y: "110%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, delay: 0.15 + i * 0.14, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {i === 2 ? (
+                  <>
+                    WEB <span className="text-accent">EXPERIENCES.</span>
+                  </>
+                ) : (
+                  line
+                )}
+              </motion.span>
+            </span>
+          ))}
+        </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.7 }}
-            className="mt-6 max-w-xl text-base sm:text-lg text-muted-foreground"
-          >
-            Freelance web developer crafting ultra-fast, motion-driven, award-caliber
-            digital products for bold founders and modern brands.
-          </motion.p>
-
+        {/* ---------- Bottom row: pitch + buttons left, terminal card right ---------- */}
+        <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.85 }}
-            className="mt-8 flex flex-wrap items-center gap-4"
+            transition={{ duration: 0.7, delay: 0.7 }}
+            className="max-w-xl"
           >
-            <button
-              data-testid="hero-email-cta"
-              onClick={() => scrollToSection("#contact")}
-              className="neo-lift neo-shadow inline-flex items-center gap-2 border-2 border-foreground bg-foreground px-6 py-3 text-sm font-bold text-background"
-            >
-              START A PROJECT <ArrowUpRight size={16} />
-            </button>
-            <a
-              data-testid="hero-whatsapp-cta"
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="neo-lift neo-shadow inline-flex items-center gap-2 border-2 border-foreground bg-accent px-6 py-3 text-sm font-bold text-accent-foreground"
-            >
-              <MessageCircle size={16} /> WHATSAPP ME
-            </a>
-            <span className="mono inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-              <MapPin size={13} /> Bamban, Tarlac, PH
-            </span>
+            <p className="text-base sm:text-lg text-muted-foreground">
+              Freelance web developer crafting ultra-fast, motion-driven, award-caliber
+              digital products for bold founders and modern brands.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <button
+                data-testid="hero-email-cta"
+                onClick={() => scrollToSection("#contact")}
+                className="neo-lift neo-shadow inline-flex items-center gap-2 border-2 border-foreground bg-foreground px-6 py-3 text-sm font-bold text-background"
+              >
+                START A PROJECT <ArrowUpRight size={16} />
+              </button>
+              <a
+                data-testid="hero-whatsapp-cta"
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="neo-lift neo-shadow inline-flex items-center gap-2 border-2 border-foreground bg-accent px-6 py-3 text-sm font-bold text-accent-foreground"
+              >
+                <MessageCircle size={16} /> WHATSAPP ME
+              </a>
+              <span className="mono inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                <MapPin size={13} /> Bamban, Tarlac, PH
+              </span>
+            </div>
           </motion.div>
-        </div>
 
-        {/* ---------- Right: 3D tilting terminal card ---------- */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          style={{ perspective: 1000 }}
-          className="hidden lg:block"
-        >
+          {/* ---------- 3D tilting terminal card ---------- */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            style={{ perspective: 1000 }}
+            className="hidden w-full max-w-md shrink-0 lg:block"
+          >
           <motion.div
             data-testid="hero-terminal-card"
             onMouseMove={handleTilt}
@@ -156,6 +155,7 @@ export default function Hero() {
             </div>
           </motion.div>
         </motion.div>
+        </div>
       </div>
     </section>
   );
