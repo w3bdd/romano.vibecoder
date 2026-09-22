@@ -4,8 +4,11 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Copy, Mail, MessageCircle, MapPin, Send } from "lucide-react";
 
-// Where the contact form posts to (address comes from the .env file).
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+// Where the form sends messages. This version posts straight to FormSubmit —
+// a free service that turns form submissions into emails delivered to
+// rvg.webdd@gmail.com. No server or database needed, which means the whole
+// site can be hosted FREE on GitHub Pages.
+const FORM_ENDPOINT = "https://formsubmit.co/ajax/rvg.webdd@gmail.com";
 const EMAIL = "rvg.webdd@gmail.com";
 const WHATSAPP_URL =
   "https://wa.me/639916848388?text=Hi%20Romano%2C%20I%27m%20interested%20in%20building%20a%20web%20project.";
@@ -25,16 +28,25 @@ export default function Contact() {
     e.preventDefault();
     setSending(true);
     try {
-      const res = await axios.post(`${API}/contact`, form);
-      toast.success(
-        res.data.emailed
-          ? "Message sent straight to Romano's inbox!"
-          : "Message received! Romano will get back to you shortly."
+      // Send the message to FormSubmit, which emails it to your inbox.
+      await axios.post(
+        FORM_ENDPOINT,
+        {
+          _subject: `Portfolio enquiry from ${form.name}`, // email subject line
+          _template: "table",   // email arrives as a neat table
+          _captcha: "false",    // keep the flow smooth; the honeypot stops bots
+          _honey: form.website, // hidden trap — bots fill it, humans never see it
+          name: form.name,
+          email: form.email,
+          budget: form.budget || "Not specified",
+          message: form.message,
+        },
+        { headers: { "Content-Type": "application/json", Accept: "application/json" } }
       );
+      toast.success("Message sent! It'll land in Romano's inbox shortly.");
       setForm(EMPTY_FORM);
-    } catch (err) {
-      const detail = err?.response?.data?.detail;
-      toast.error(typeof detail === "string" ? detail : "Couldn't send right now — try WhatsApp instead.");
+    } catch {
+      toast.error("Couldn't send right now — try WhatsApp instead.");
     } finally {
       setSending(false);
     }

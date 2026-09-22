@@ -16,15 +16,16 @@ A personal portfolio website (more website than web app) for Romano Galvan, a vi
 - Design system: `/app/design_guidelines.json` (Neo-Brutalist Kinetic Minimalist: Syne / Plus Jakarta Sans / JetBrains Mono; light = paper/orange, dark = ink/terminal-green)
 
 ## Implemented (2026-07-17... build date: current session)
-- Kinetic hero: masked line-by-line headline reveal, 3D mouse-tilt terminal card, parallax accent blob, availability badge, live GMT+8 clock
+- Kinetic hero: masked line-by-line headline reveal, 3D mouse-tilt terminal card with self-typing two-act coding animation (intro → build/deploy loop), parallax accent blob, lightweight canvas "code rain" backdrop, availability badge, live GMT+8 clock
 - Editorial marquee ribbon (pure CSS, pause on hover)
 - Services matrix (4 cards, neo-brutalist hard shadows, tag pills)
 - Manifesto/about in 3 numbered chapters with sticky left column
 - Selected work: 4 SAMPLE project cards with CSS-only artwork + outcome strips (content is placeholder — user to replace with real work)
-- Contact: validated form (name/email/budget/message + honeypot), toast feedback, copy-email button, WhatsApp click-to-chat (prefilled message)
+- Contact: validated form + toast feedback, copy-email button, WhatsApp click-to-chat
 - Sticky bottom CTA pill, mobile hamburger nav, light/dark toggle
 - SEO: title, meta description, keywords, Open Graph, Twitter card
-- Backend: /api/contact with spam guards; SMTP delivery ready but PLACEHOLDER credentials in /app/backend/.env (messages saved to DB only until real SMTP host/user/pass are filled in)
+- STATIC-READY for GitHub Pages: contact form posts directly to FormSubmit AJAX endpoint (https://formsubmit.co/ajax/rvg.webdd@gmail.com), no backend required at runtime. package.json has homepage:"." + gh-pages deploy scripts. Guide: /app/DEPLOY_GITHUB_PAGES.md
+- Backend (kept for future VPS use): /api/contact with spam guards; SMTP delivery ready but PLACEHOLDER credentials in /app/backend/.env
 
 ## Prioritized Backlog
 - P0: User adds real SMTP credentials to backend/.env (SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_FROM) → form emails start landing in rvg.webdd@gmail.com
