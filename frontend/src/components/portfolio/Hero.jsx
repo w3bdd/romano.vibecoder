@@ -80,7 +80,7 @@ export default function Hero() {
         </h1>
 
         {/* ---------- Bottom row: pitch + buttons left, terminal card right ---------- */}
-        <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
