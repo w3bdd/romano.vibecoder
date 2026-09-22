@@ -2,6 +2,7 @@ import { motion, useMotionValue, useSpring, useScroll, useTransform } from "fram
 import { ArrowUpRight, MessageCircle, MapPin } from "lucide-react";
 import { scrollToSection } from "@/App";
 import CodeRain from "@/components/portfolio/CodeRain";
+import TypedTerminal from "@/components/portfolio/TypedTerminal";
 
 const WHATSAPP_URL =
   "https://wa.me/639916848388?text=Hi%20Romano%2C%20I%27m%20interested%20in%20building%20a%20web%20project.";
@@ -140,22 +141,8 @@ export default function Hero() {
                 romano@vibe-coder — zsh
               </span>
             </div>
-            {/* Fake terminal output — a little personality, zero cost */}
-            <div className="mono space-y-2.5 p-6 text-xs sm:text-sm leading-relaxed">
-              <p><span className="text-accent">➜</span> whoami</p>
-              <p className="text-muted-foreground">romano_galvan — vibe coder, tarlac PH</p>
-              <p><span className="text-accent">➜</span> stack --list</p>
-              <p className="text-muted-foreground">react · fastapi · tailwind · framer-motion · lenis</p>
-              <p><span className="text-accent">➜</span> ship --fast --secure</p>
-              <p>
-                <span className="text-accent">✔ build passed</span>{" "}
-                <span className="text-muted-foreground">in 0.4s — lighthouse 100</span>
-              </p>
-              <p>
-                <span className="text-accent">➜</span>{" "}
-                <span className="inline-block h-4 w-2 translate-y-0.5 bg-accent animate-pulse-dot" />
-              </p>
-            </div>
+            {/* Animated terminal: types commands and builds the app on loop */}
+            <TypedTerminal />
           </motion.div>
         </motion.div>
         </div>
