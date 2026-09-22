@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, MessageCircle, MapPin } from "lucide-react";
 import { scrollToSection } from "@/App";
+import CodeRain from "@/components/portfolio/CodeRain";
 
 const WHATSAPP_URL =
   "https://wa.me/639916848388?text=Hi%20Romano%2C%20I%27m%20interested%20in%20building%20a%20web%20project.";
@@ -38,6 +39,8 @@ export default function Hero() {
         style={{ y: blobY }}
         className="pointer-events-none absolute -top-24 -right-24 h-96 w-96 rounded-full bg-accent/20 blur-3xl"
       />
+      {/* Light falling-code backdrop — sits behind everything */}
+      <CodeRain />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
         {/* Availability badge */}
