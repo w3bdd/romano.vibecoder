@@ -32,7 +32,7 @@ export default function Hero() {
   const blobY = useTransform(scrollYProgress, [0, 0.25], [0, 140]);
 
   return (
-    <section id="top" className="grid-bg relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
+    <section id="top" className="grid-bg relative overflow-hidden pt-28 pb-16 sm:pt-32 sm:pb-20">
       {/* Soft accent glow that parallax-drifts on scroll */}
       <motion.div
         style={{ y: blobY }}
@@ -56,7 +56,7 @@ export default function Hero() {
             gets so big that the longest word spills off screen. */}
         <h1
           data-testid="hero-headline"
-          className="font-heading font-extrabold leading-[0.95] tracking-tight text-[clamp(1.6rem,6.5vw,5.5rem)] break-words"
+          className="font-heading font-extrabold leading-[0.95] tracking-tight text-[clamp(1.6rem,6vw,5rem)] break-words"
         >
           {HEADLINE.map((line, i) => (
             // Each line sits in an overflow-hidden "mask"; the text slides up into view.
@@ -80,7 +80,7 @@ export default function Hero() {
         </h1>
 
         {/* ---------- Bottom row: pitch + buttons left, terminal card right ---------- */}
-        <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
