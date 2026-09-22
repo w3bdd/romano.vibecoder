@@ -10,9 +10,20 @@ import { useEffect, useState } from "react";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// The show script: "cmd" = typed out letter by letter,
-// "out"/"ok" = printed instantly, "bar" = animated progress bar.
+// The show script, in two acts:
+//   Act 1 — the intro card (who Romano is, what he works with)
+//   Act 2 — the coding session (dev server, build, deploy)
+// "cmd" = typed letter by letter, "out"/"ok" = printed instantly,
+// "bar" = animated progress bar, "clear" = wipe the screen for the next act.
 const SCRIPT = [
+  { type: "cmd", text: "whoami" },
+  { type: "out", text: "romano_galvan — vibe coder, tarlac PH" },
+  { type: "cmd", text: "stack --list" },
+  { type: "out", text: "react · fastapi · tailwind · framer-motion · lenis" },
+  { type: "cmd", text: "ship --fast --secure" },
+  { type: "ok", text: "✔ build passed in 0.4s — lighthouse 100" },
+  { type: "hold", ms: 2600 }, // let visitors read the intro
+  { type: "clear" },
   { type: "cmd", text: "npm run dev" },
   { type: "out", text: "vite v6.2  ready in 212 ms" },
   { type: "cmd", text: "npm run build" },
@@ -21,6 +32,7 @@ const SCRIPT = [
   { type: "ok", text: "✔ built in 0.84s · 68 kB gzip" },
   { type: "cmd", text: "git push origin main" },
   { type: "ok", text: "✔ deployed · lighthouse 100/100" },
+  { type: "hold", ms: 3800 }, // admire the finished build, then replay
 ];
 
 export default function TypedTerminal() {
@@ -31,9 +43,9 @@ export default function TypedTerminal() {
   useEffect(() => {
     let cancelled = false;
 
-    // Visitors with "reduce motion" enabled get a finished transcript instead.
+    // Visitors with "reduce motion" enabled get the finished intro, no animation.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setLines(SCRIPT.filter((s) => s.type !== "bar"));
+      setLines(SCRIPT.filter((s) => ["cmd", "out", "ok"].includes(s.type)).slice(0, 6));
       return;
     }
 
@@ -42,12 +54,17 @@ export default function TypedTerminal() {
         setLines([]);
         setTyping("");
         setBar(null);
-        const done = [];
+        let done = [];
 
         for (const step of SCRIPT) {
           if (cancelled) return;
 
-          if (step.type === "cmd") {
+          if (step.type === "hold") {
+            await sleep(step.ms); // quiet beat before the next thing happens
+          } else if (step.type === "clear") {
+            done = [];
+            setLines([]);
+          } else if (step.type === "cmd") {
             // Type the command one character at a time, like a human.
             for (let i = 1; i <= step.text.length; i++) {
               if (cancelled) return;
@@ -72,8 +89,6 @@ export default function TypedTerminal() {
             setLines([...done]);
           }
         }
-
-        await sleep(3800); // leave the finished build on screen, then replay
       }
     };
     run();
