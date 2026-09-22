@@ -1,0 +1,35 @@
+# ---------------------------------------------------------------
+# systemd service for the contact-form backend (VPS deployment).
+# systemd is Ubuntu's "service manager": it starts your Python backend
+# when the server boots and restarts it automatically if it ever crashes.
+#
+# How to use: copy this file to /etc/systemd/system/portfolio-backend.service
+# then run:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now portfolio-backend
+# Check it's alive anytime with: sudo systemctl status portfolio-backend
+# ---------------------------------------------------------------
+
+[Unit]
+Description=Portfolio contact-form backend (FastAPI)
+After=network.target mongod.service
+
+[Service]
+# Where the backend code lives on the server
+WorkingDirectory=/var/www/portfolio/backend
+
+# Loads your settings (mail server credentials, database address)
+EnvironmentFile=/var/www/portfolio/backend/.env
+
+# Start the backend, listening only on this machine (Nginx faces the public)
+ExecStart=/var/www/portfolio/backend/venv/bin/uvicorn server:app --host 127.0.0.1 --port 8001
+
+# If it ever crashes, wait 3 seconds and start it again — forever
+Restart=always
+RestartSec=3
+
+# Runs as a low-privilege user, not root (safer)
+User=www-data
+
+[Install]
+WantedBy=multi-user.target

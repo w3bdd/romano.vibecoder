@@ -25,6 +25,7 @@ A personal portfolio website (more website than web app) for Romano Galvan, a vi
 - Sticky bottom CTA pill, mobile hamburger nav, light/dark toggle
 - SEO: title, meta description, keywords, Open Graph, Twitter card
 - STATIC-READY for GitHub Pages: contact form posts directly to FormSubmit AJAX endpoint (https://formsubmit.co/ajax/rvg.webdd@gmail.com), no backend required at runtime. package.json has homepage:"." + gh-pages deploy scripts. Guide: /app/DEPLOY_GITHUB_PAGES.md
+- VPS-READY: contact form is dual-mode via REACT_APP_CONTACT_MODE ("formsubmit" for static hosting, "smtp" for VPS → posts to own FastAPI /api/contact which emails via private SMTP server). Deploy kit: /app/deploy/nginx.conf (static files + /api proxy + caching + security headers), /app/deploy/portfolio-backend.service (systemd auto-restart), full layman guide /app/DEPLOY_VPS.md (Ubuntu: Node/Python/MongoDB/Nginx/Certbot, .env SMTP setup, firewall, testing, troubleshooting)
 - Backend (kept for future VPS use): /api/contact with spam guards; SMTP delivery ready but PLACEHOLDER credentials in /app/backend/.env
 
 ## Prioritized Backlog

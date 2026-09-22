@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { Copy, Mail, MessageCircle, MapPin, Send } from "lucide-react";
 
-// Where the form sends messages. This version posts straight to FormSubmit —
-// a free service that turns form submissions into emails delivered to
-// rvg.webdd@gmail.com. No server or database needed, which means the whole
-// site can be hosted FREE on GitHub Pages.
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/rvg.webdd@gmail.com";
+// Where the form sends messages. Two modes, chosen by REACT_APP_CONTACT_MODE:
+//   "formsubmit" (default) — posts to FormSubmit, a free service that emails
+//     each message to rvg.webdd@gmail.com. No server needed (GitHub Pages).
+//   "smtp" — posts to your own FastAPI backend (/api/contact), which forwards
+//     the message through YOUR private mail server. Use this on your VPS.
+const CONTACT_MODE = process.env.REACT_APP_CONTACT_MODE || "formsubmit";
+const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/rvg.webdd@gmail.com";
+const BACKEND_ENDPOINT = `${process.env.REACT_APP_BACKEND_URL}/api/contact`;
 const EMAIL = "rvg.webdd@gmail.com";
 const WHATSAPP_URL =
   "https://wa.me/639916848388?text=Hi%20Romano%2C%20I%27m%20interested%20in%20building%20a%20web%20project.";
@@ -28,25 +31,32 @@ export default function Contact() {
     e.preventDefault();
     setSending(true);
     try {
-      // Send the message to FormSubmit, which emails it to your inbox.
-      await axios.post(
-        FORM_ENDPOINT,
-        {
-          _subject: `Portfolio enquiry from ${form.name}`, // email subject line
-          _template: "table",   // email arrives as a neat table
-          _captcha: "false",    // keep the flow smooth; the honeypot stops bots
-          _honey: form.website, // hidden trap — bots fill it, humans never see it
-          name: form.name,
-          email: form.email,
-          budget: form.budget || "Not specified",
-          message: form.message,
-        },
-        { headers: { "Content-Type": "application/json", Accept: "application/json" } }
-      );
+      if (CONTACT_MODE === "smtp") {
+        // VPS mode: your own backend validates the message, keeps a backup
+        // copy in the database, and emails it through your mail server.
+        await axios.post(BACKEND_ENDPOINT, form);
+      } else {
+        // Static mode (GitHub Pages): FormSubmit turns it into an email.
+        await axios.post(
+          FORMSUBMIT_ENDPOINT,
+          {
+            _subject: `Portfolio enquiry from ${form.name}`, // email subject line
+            _template: "table",   // email arrives as a neat table
+            _captcha: "false",    // keep the flow smooth; the honeypot stops bots
+            _honey: form.website, // hidden trap — bots fill it, humans never see it
+            name: form.name,
+            email: form.email,
+            budget: form.budget || "Not specified",
+            message: form.message,
+          },
+          { headers: { "Content-Type": "application/json", Accept: "application/json" } }
+        );
+      }
       toast.success("Message sent! It'll land in Romano's inbox shortly.");
       setForm(EMPTY_FORM);
-    } catch {
-      toast.error("Couldn't send right now — try WhatsApp instead.");
+    } catch (err) {
+      const detail = err?.response?.data?.detail;
+      toast.error(typeof detail === "string" ? detail : "Couldn't send right now — try WhatsApp instead.");
     } finally {
       setSending(false);
     }
