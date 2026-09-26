@@ -1,12 +1,13 @@
 import ClockPill from "@/components/portfolio/ClockPill";
 import { scrollToSection } from "@/App";
 
-// Big typographic sign-off. Social URLs are placeholders — swap in your real profiles.
+// Big typographic sign-off with Romano's real profiles.
 const SOCIALS = [
-  { name: "GitHub", url: "https://github.com" },
-  { name: "LinkedIn", url: "https://linkedin.com" },
+  { name: "Facebook", url: "https://www.facebook.com/romano.vibecoder" },
+  { name: "GitHub", url: "https://github.com/w3bdd" },
+  { name: "LinkedIn", url: "https://www.linkedin.com/in/vibecoder4117" },
   { name: "WhatsApp", url: "https://wa.me/639916848388" },
-  { name: "Email", url: "mailto:rvg.webdd@gmail.com" },
+  { name: "Email", url: "mailto:romano.vibecoder@gmail.com" },
 ];
 
 export default function Footer() {

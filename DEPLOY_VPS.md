@@ -80,7 +80,7 @@ SMTP_PORT="465"
 SMTP_USERNAME="you@yourdomain.com"
 SMTP_PASSWORD="your-real-password"
 SMTP_FROM="you@yourdomain.com"
-CONTACT_RECEIVER="rvg.webdd@gmail.com"
+CONTACT_RECEIVER="romano.vibecoder@gmail.com"
 ```
 (Save in nano: press Ctrl+O, Enter, then Ctrl+X.)
 
@@ -152,7 +152,7 @@ sudo ufw enable
 
 1. Open `https://yourdomain.com` — the site should load with the padlock
 2. Send yourself a message through the contact form
-3. Check **rvg.webdd@gmail.com** — the message should arrive via your mail server
+3. Check **romano.vibecoder@gmail.com** — the message should arrive via your mail server
 4. Reboot the server (`sudo reboot`), wait a minute, confirm the site is back
    up by itself
 

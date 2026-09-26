@@ -1,49 +1,53 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-// Selected work. These are SAMPLE projects with generated copy —
-// replace titles, outcomes, and tags with your real case studies anytime.
-// The "artwork" is pure CSS (giant letter + glow), so the page stays light and fast.
+// Sample projects — real live sites Romano built. Each card links out to the
+// live site in a new tab. The "artwork" is pure CSS (giant letter + glow),
+// so the page stays light and fast.
 const PROJECTS = [
   {
     id: "project-1",
-    monogram: "K",
-    title: "KINETIC — AI Workflow Engine",
-    category: "WEB APPLICATION",
-    outcome: "+320% user engagement · 0.4s first paint",
-    desc: "High-speed dashboard and landing suite for an autonomous AI workflow orchestrator.",
-    glow: "bg-orange-500/25",
-    tags: ["React", "FastAPI", "Framer Motion"],
+    monogram: "C",
+    title: "CleverHouse Philippines",
+    category: "SMART HOME & SOLAR",
+    outcome: "Smart living. Secured. Powered.",
+    desc: "Company site for a smart home, CCTV, solar, and electrical engineering provider serving Aurora and Central Luzon.",
+    url: "https://w3bdd.github.io/cleverhouse.ph/",
+    glow: "bg-emerald-500/25",
+    tags: ["Smart Home", "Solar", "CCTV"],
   },
   {
     id: "project-2",
-    monogram: "P",
-    title: "PULSE — Web3 Trading Terminal",
-    category: "FINTECH PLATFORM",
-    outcome: "$4.2M transaction volume · 99.99% uptime",
-    desc: "Dark-mode, real-time analytics interface with custom charting and brutalist data cards.",
-    glow: "bg-emerald-500/25",
-    tags: ["TypeScript", "Recharts", "Tailwind"],
+    monogram: "R",
+    title: "RenovaLife Dialysis Center",
+    category: "HEALTHCARE",
+    outcome: "Renewing lives. Restoring hope.",
+    desc: "Website for a PhilHealth-accredited dialysis center focused on dignity, comfort, and human-centered healing.",
+    url: "https://w3bdd.github.io/renovalife.ph/",
+    glow: "bg-sky-500/25",
+    tags: ["Healthcare", "PhilHealth", "Patient Care"],
   },
   {
     id: "project-3",
     monogram: "A",
-    title: "AURA — Digital Creative Agency",
-    category: "AWARD-STYLE SITE",
-    outcome: "Site of the Day nominee · +180% inbound leads",
-    desc: "Experimental agency website with kinetic typography, momentum scroll, and cursor physics.",
-    glow: "bg-purple-500/25",
-    tags: ["Lenis", "Framer Motion", "CSS Grid"],
+    title: "Aureon Architecture & Builders",
+    category: "ARCHITECTURE & CONSTRUCTION",
+    outcome: "Design. Build. Endure.",
+    desc: "Site for a family-owned architectural and construction firm serving Central Luzon and beyond since 2016.",
+    url: "https://w3bdd.github.io/aureon.ar/",
+    glow: "bg-amber-500/25",
+    tags: ["Architecture", "Design & Build", "Construction"],
   },
   {
     id: "project-4",
-    monogram: "S",
-    title: "SOLARIS — Sustainable Energy Portal",
-    category: "SAAS PLATFORM",
-    outcome: "-65% bounce rate · 100/100 Lighthouse",
-    desc: "Clean dashboard tracking live solar grid output and carbon-reduction metrics.",
-    glow: "bg-amber-500/25",
-    tags: ["React", "Tailwind", "Recharts"],
+    monogram: "X",
+    title: "CoreGridX Technologies",
+    category: "IT INFRASTRUCTURE",
+    outcome: "Infrastructure, engineered for the long run.",
+    desc: "Corporate site for a firm designing, deploying, securing, and managing server, network, and data center environments.",
+    url: "https://w3bdd.github.io/coregridx.it/",
+    glow: "bg-orange-500/25",
+    tags: ["Servers", "Networks", "Data Centers"],
   },
 ];
 
@@ -56,25 +60,28 @@ export default function Projects() {
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7 }}
       >
-        <p className="mono text-xs tracking-[0.25em] text-accent">[ SELECTED WORK ]</p>
+        <p className="mono text-xs tracking-[0.25em] text-accent">[ SAMPLE PROJECTS ]</p>
         <h2 className="font-heading mt-3 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight">
-          PROJECTS WITH <span className="text-accent">OUTCOMES.</span>
+          SITES I'VE <span className="text-accent">SHIPPED.</span>
         </h2>
         <p className="mt-4 max-w-xl text-sm sm:text-base text-muted-foreground">
-          Not just screenshots — every build is measured by what it did for the business.
+          Real sample projects, live on the web — click any card to open the site in a new tab.
         </p>
       </motion.div>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2">
         {PROJECTS.map((p, i) => (
-          <motion.article
+          <motion.a
             key={p.id}
             data-testid={`project-card-${p.id}`}
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.6, delay: (i % 2) * 0.12 }}
-            className="neo-lift neo-shadow group border-2 border-foreground bg-card"
+            className="neo-lift neo-shadow group block border-2 border-foreground bg-card"
           >
             {/* CSS-only "cover art": dark canvas, glow, giant ghost letter */}
             <div className="relative h-44 sm:h-52 overflow-hidden border-b-2 border-foreground bg-zinc-950">
@@ -107,7 +114,7 @@ export default function Projects() {
                 ))}
               </div>
             </div>
-          </motion.article>
+          </motion.a>
         ))}
       </div>
     </section>

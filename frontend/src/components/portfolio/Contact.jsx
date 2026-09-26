@@ -5,14 +5,17 @@ import { toast } from "sonner";
 import { Copy, Mail, MessageCircle, MapPin, Send } from "lucide-react";
 
 // Where the form sends messages. Two modes, chosen by REACT_APP_CONTACT_MODE:
-//   "formsubmit" (default) — posts to FormSubmit, a free service that emails
-//     each message to rvg.webdd@gmail.com. No server needed (GitHub Pages).
+//   "web3forms" (default) — posts to Web3Forms, a free service that emails
+//     each message to romano.vibecoder@gmail.com. No server needed (GitHub Pages).
 //   "smtp" — posts to your own FastAPI backend (/api/contact), which forwards
 //     the message through YOUR private mail server. Use this on your VPS.
-const CONTACT_MODE = process.env.REACT_APP_CONTACT_MODE || "formsubmit";
-const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/rvg.webdd@gmail.com";
+const CONTACT_MODE = process.env.REACT_APP_CONTACT_MODE || "web3forms";
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+// Your Web3Forms access key (free at web3forms.com — see DEPLOY_GITHUB_PAGES.md).
+// It's safe for this key to be visible in the browser; it only sends mail to you.
+const WEB3FORMS_KEY = process.env.REACT_APP_WEB3FORMS_ACCESS_KEY || "";
 const BACKEND_ENDPOINT = `${process.env.REACT_APP_BACKEND_URL}/api/contact`;
-const EMAIL = "rvg.webdd@gmail.com";
+const EMAIL = "romano.vibecoder@gmail.com";
 const WHATSAPP_URL =
   "https://wa.me/639916848388?text=Hi%20Romano%2C%20I%27m%20interested%20in%20building%20a%20web%20project.";
 
@@ -29,6 +32,15 @@ export default function Contact() {
 
   const submit = async (e) => {
     e.preventDefault();
+
+    // Honeypot check right in the browser: humans never fill the hidden
+    // "website" field, so a filled one means a bot — silently discard it.
+    if (form.website.trim()) {
+      toast.success("Message sent! It'll land in Romano's inbox shortly.");
+      setForm(EMPTY_FORM);
+      return;
+    }
+
     setSending(true);
     try {
       if (CONTACT_MODE === "smtp") {
@@ -36,26 +48,31 @@ export default function Contact() {
         // copy in the database, and emails it through your mail server.
         await axios.post(BACKEND_ENDPOINT, form);
       } else {
-        // Static mode (GitHub Pages): FormSubmit turns it into an email.
-        await axios.post(
-          FORMSUBMIT_ENDPOINT,
+        // Static mode (GitHub Pages): Web3Forms turns it into an email.
+        if (!WEB3FORMS_KEY || WEB3FORMS_KEY.includes("your-access-key")) {
+          toast.error("The form isn't configured yet — please use WhatsApp for now.");
+          return;
+        }
+        const res = await axios.post(
+          WEB3FORMS_ENDPOINT,
           {
-            _subject: `Portfolio enquiry from ${form.name}`, // email subject line
-            _template: "table",   // email arrives as a neat table
-            _captcha: "false",    // keep the flow smooth; the honeypot stops bots
-            _honey: form.website, // hidden trap — bots fill it, humans never see it
+            access_key: WEB3FORMS_KEY,
+            subject: `Portfolio enquiry from ${form.name}`, // email subject line
+            from_name: "Romano Galvan Portfolio",
             name: form.name,
             email: form.email,
             budget: form.budget || "Not specified",
             message: form.message,
+            botcheck: "", // Web3Forms' own bot trap (always empty for humans)
           },
           { headers: { "Content-Type": "application/json", Accept: "application/json" } }
         );
+        if (!res.data.success) throw new Error(res.data.message);
       }
       toast.success("Message sent! It'll land in Romano's inbox shortly.");
       setForm(EMPTY_FORM);
     } catch (err) {
-      const detail = err?.response?.data?.detail;
+      const detail = err?.response?.data?.detail || err?.response?.data?.message;
       toast.error(typeof detail === "string" ? detail : "Couldn't send right now — try WhatsApp instead.");
     } finally {
       setSending(false);
