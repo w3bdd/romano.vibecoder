@@ -4,60 +4,62 @@ Your site is **fully static**: it's just HTML, CSS, and JavaScript files.
 That means GitHub Pages can host it completely free. The contact form sends
 email through Web3Forms (a free form-to-email service), so no server is needed.
 
+Your Web3Forms key is stored as a **GitHub secret** — it never touches the
+repository code. A robot (GitHub Actions) builds and publishes the site for
+you automatically every time you push. The workflow file is already included
+in this project at `.github/workflows/deploy.yml`.
+
 > The `backend/` folder is still in the project, but GitHub Pages ignores it.
 > Keep it — it's ready if you ever move to your VPS and want SMTP delivery
 > through your own mail server instead.
 
+**One honest note about the key:** the secret keeps your key out of the git
+history, but the built website is public, so the key is technically visible
+in the site's final JavaScript. That's completely fine — Web3Forms keys are
+designed to be public. They can only SEND email to you, never read anything.
+
 ---
 
-## One-time setup
+## One-time setup (about 10 minutes)
 
-### 1. Get your free Web3Forms access key (5 minutes)
-The contact form needs a free "access key" so Web3Forms knows which inbox
-receives the messages:
-
+### 1. Get your free Web3Forms access key
 1. Go to **https://web3forms.com**
 2. Enter your email: **romano.vibecoder@gmail.com**
 3. Open the verification email Web3Forms sends you and confirm it
-4. Copy the **Access Key** they give you (looks like
-   `a1b2c3d4-1234-5678-abcd-abcdef123456`)
-5. Paste it into `frontend/.env`, replacing the placeholder:
-   ```
-   REACT_APP_WEB3FORMS_ACCESS_KEY=paste-your-real-key-here
-   ```
+4. Copy the **Access Key** (looks like `a1b2c3d4-1234-5678-abcd-abcdef123456`)
 
-Don't worry about the key being visible in the website's code — it's designed
-to be public. It can only send email TO you, never read anything.
+### 2. Store the key as a GitHub secret
+1. Open your repository on GitHub
+2. Go to **Settings → Secrets and variables → Actions**
+3. Click **New repository secret**
+4. Fill in:
+   - **Name:** `REACT_APP_WEB3FORMS_ACCESS_KEY` (must be exactly this)
+   - **Secret:** paste your access key
+5. Click **Add secret**
 
-### 2. Push the code to GitHub
+GitHub now stores it encrypted. Nobody — including you — can view it again
+through the website; you can only replace it.
+
+### 3. Push the code to GitHub
 Use the Save button in Emergent → "Save to GitHub", or push manually.
+The moment the code lands on the `main` branch, the build robot starts
+automatically (check the **Actions** tab to watch it work).
 
-### 3. On your own computer (or any machine with Node.js)
+> If your default branch is called `master` instead of `main`, open
+> `.github/workflows/deploy.yml` and change `branches: [main]` to
+> `branches: [master]`.
 
-```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-cd YOUR-REPO/frontend
-yarn install
-yarn deploy
-```
+### 4. Tell GitHub Pages to use the robot
+In your repository: **Settings → Pages → Source → select "GitHub Actions"**
+(NOT "Deploy from a branch").
 
-What `yarn deploy` does, in plain words:
-1. `predeploy` runs automatically first — it builds the site into a folder
-   called `build/` (this is the actual website, all packed and optimized,
-   with your access key baked in).
-2. `gh-pages -d build` then publishes that folder to a special branch called
-   `gh-pages` in your repository. GitHub Pages serves your site from there.
-
-### 4. Turn on GitHub Pages (one click)
-In your GitHub repository:
-**Settings → Pages → Source → select the `gh-pages` branch → Save**
-
-Wait 1–2 minutes. Your site is live at:
+### 5. Done — your site is live
+After the Actions run finishes (green checkmark, ~2 minutes), your site is at:
 ```
 https://YOUR-USERNAME.github.io/YOUR-REPO/
 ```
 
-### 5. Test the contact form
+### 6. Test the contact form
 Send yourself a message from the live site. It should arrive at
 **romano.vibecoder@gmail.com** within a minute. If it's not in the inbox,
 check Spam and the Promotions tab — mark it "not spam" once and future
@@ -67,13 +69,14 @@ messages will land in the inbox.
 
 ## Updating the site later
 
-After any change, from the `frontend/` folder just run:
+Just push your changes to `main` — the robot rebuilds and republishes
+automatically. Nothing else to do.
 
-```bash
-yarn deploy
-```
+## Rotating or replacing the key
 
-That's it — the live site updates within a minute or two.
+If you ever get a new key: **Settings → Secrets and variables → Actions →
+click the secret name → Update secret**, then re-run the workflow
+(Actions tab → "Deploy to GitHub Pages" → "Re-run jobs").
 
 ---
 
@@ -85,12 +88,15 @@ Ask me for a step-by-step when you're ready.
 
 ## Troubleshooting
 
-- **Blank page after deploy?** Make sure the repo is public (or you have
-  GitHub Pro for private Pages), and that you selected the `gh-pages` branch
-  in Settings → Pages.
-- **Form says "isn't configured yet"?** The access key in `frontend/.env` is
-  still the placeholder — do step 1, then run `yarn deploy` again.
+- **Actions run failed?** Open the failed run in the Actions tab and click
+  the red step to read the error. Most common cause: the secret name has a
+  typo — it must be exactly `REACT_APP_WEB3FORMS_ACCESS_KEY`.
+- **Blank page after deploy?** Make sure Settings → Pages → Source is set to
+  "GitHub Actions", and the repo is public (or you have GitHub Pro).
+- **Form says "isn't configured yet"?** The secret is missing or misnamed —
+  redo step 2, then Actions tab → Re-run jobs.
 - **Form says sent but no email?** Check Spam/Promotions in Gmail, and make
   sure you verified your email at web3forms.com (step 1).
-- **`yarn: command not found`?** Install Node.js first (nodejs.org), then run
-  `npm install -g yarn` once.
+- **Want to build on your own computer instead?** You still can: put the key
+  in `frontend/.env` locally, then `cd frontend && yarn deploy`. But the
+  secrets method above is recommended — nothing sensitive ever sits in files.

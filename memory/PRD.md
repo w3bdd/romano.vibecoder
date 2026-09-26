@@ -24,7 +24,7 @@ A personal portfolio website (more website than web app) for Romano Galvan, a vi
 - Contact: validated form + toast feedback, copy-email button, WhatsApp click-to-chat
 - Sticky bottom CTA pill, mobile hamburger nav, light/dark toggle
 - SEO: title, meta description, keywords, Open Graph, Twitter card
-- STATIC-READY for GitHub Pages: contact form posts directly to Web3Forms API (https://api.web3forms.com/submit) → emails romano.vibecoder@gmail.com. Needs REACT_APP_WEB3FORMS_ACCESS_KEY in frontend/.env (placeholder until owner creates free key at web3forms.com). package.json has homepage:"." + gh-pages deploy scripts. Guide: /app/DEPLOY_GITHUB_PAGES.md
+- STATIC-READY for GitHub Pages: contact form posts directly to Web3Forms API (https://api.web3forms.com/submit) → emails romano.vibecoder@gmail.com. Key injected at build time from GitHub repo secret REACT_APP_WEB3FORMS_ACCESS_KEY via Actions workflow /app/.github/workflows/deploy.yml (owner declined to share key; creates it themselves at web3forms.com). package.json has homepage:"." + gh-pages deploy scripts as local fallback. Guide: /app/DEPLOY_GITHUB_PAGES.md
 - VPS-READY: contact form is dual-mode via REACT_APP_CONTACT_MODE ("formsubmit" for static hosting, "smtp" for VPS → posts to own FastAPI /api/contact which emails via private SMTP server). Deploy kit: /app/deploy/nginx.conf (static files + /api proxy + caching + security headers), /app/deploy/portfolio-backend.service (systemd auto-restart), full layman guide /app/DEPLOY_VPS.md (Ubuntu: Node/Python/MongoDB/Nginx/Certbot, .env SMTP setup, firewall, testing, troubleshooting)
 - Backend (kept for future VPS use): /api/contact with spam guards; SMTP delivery ready but PLACEHOLDER credentials in /app/backend/.env
 

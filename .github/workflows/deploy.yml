@@ -1,0 +1,71 @@
+# ---------------------------------------------------------------
+# GitHub Actions workflow — builds and publishes the site to the
+# GitHub Pages on every push to main. In plain words:
+#   1. GitHub spins up a clean computer in the cloud
+#   2. It installs the project's tools and builds the website
+#   3. While building, it injects your Web3Forms key from the
+#      repository's SECRETS vault (never stored in the code)
+#   4. It publishes the result to GitHub Pages
+# You never run anything manually — just push code.
+# ---------------------------------------------------------------
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main] # change to "master" if your default branch is called master
+  workflow_dispatch: # lets you trigger it by hand from the Actions tab
+
+# Permissions the workflow needs to publish to Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# If you push twice quickly, cancel the older run
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Download your repository code
+      - uses: actions/checkout@v4
+
+      # Install Node.js 20 and cache yarn packages for faster builds
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      # Install the project's libraries
+      - run: yarn install --frozen-lockfile
+        working-directory: frontend
+
+      # Build the static website. The Web3Forms key comes from the
+      # repository secret you created — it is baked into the built
+      # files but never appears in your repository code.
+      - run: yarn build
+        working-directory: frontend
+        env:
+          REACT_APP_WEB3FORMS_ACCESS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_ACCESS_KEY }}
+          REACT_APP_CONTACT_MODE: web3forms
+          REACT_APP_BACKEND_URL: ""
+
+      # Hand the built files to GitHub Pages
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
