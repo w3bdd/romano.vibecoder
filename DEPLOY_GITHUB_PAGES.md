@@ -89,8 +89,12 @@ Ask me for a step-by-step when you're ready.
 ## Troubleshooting
 
 - **Actions run failed?** Open the failed run in the Actions tab and click
-  the red step to read the error. Most common cause: the secret name has a
-  typo — it must be exactly `REACT_APP_WEB3FORMS_ACCESS_KEY`.
+  the red step to read the error. Most common causes: the secret name has a
+  typo (it must be exactly `REACT_APP_WEB3FORMS_ACCESS_KEY`), or your default
+  branch is `master` not `main` (edit `branches:` in the workflow file).
+- **"cache-dependency-path" or "yarn.lock" errors?** You're on an old copy of
+  the workflow — push the latest code; the current workflow auto-detects your
+  folder layout and doesn't use that cache setting anymore.
 - **Blank page after deploy?** Make sure Settings → Pages → Source is set to
   "GitHub Actions", and the repo is public (or you have GitHub Pro).
 - **Form says "isn't configured yet"?** The secret is missing or misnamed —

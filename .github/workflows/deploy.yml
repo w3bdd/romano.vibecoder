@@ -1,10 +1,11 @@
 # ---------------------------------------------------------------
-# GitHub Actions workflow — builds and publishes the site to the
+# GitHub Actions workflow — builds and publishes the site to
 # GitHub Pages on every push to main. In plain words:
 #   1. GitHub spins up a clean computer in the cloud
-#   2. It installs the project's tools and builds the website
-#   3. While building, it injects your Web3Forms key from the
-#      repository's SECRETS vault (never stored in the code)
+#   2. It finds your website code (works whether it sits in a
+#      "frontend/" folder or directly at the repository root)
+#   3. It builds the website, injecting your Web3Forms key from
+#      the repository's SECRETS vault (never stored in the code)
 #   4. It publishes the result to GitHub Pages
 # You never run anything manually — just push code.
 # ---------------------------------------------------------------
@@ -33,22 +34,32 @@ jobs:
       # Download your repository code
       - uses: actions/checkout@v4
 
-      # Install Node.js 20 and cache yarn packages for faster builds
+      # Figure out where the website code lives: in a "frontend/"
+      # subfolder, or directly at the repository root. This makes the
+      # workflow work no matter how the repo is laid out.
+      - name: Locate the website code
+        id: dir
+        run: |
+          if [ -f frontend/package.json ]; then
+            echo "path=frontend" >> "$GITHUB_OUTPUT"
+          else
+            echo "path=." >> "$GITHUB_OUTPUT"
+          fi
+
+      # Install Node.js 20 (plain install — no fragile cache config)
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
-          cache-dependency-path: frontend/yarn.lock
 
       # Install the project's libraries
       - run: yarn install --frozen-lockfile
-        working-directory: frontend
+        working-directory: ${{ steps.dir.outputs.path }}
 
       # Build the static website. The Web3Forms key comes from the
       # repository secret you created — it is baked into the built
       # files but never appears in your repository code.
       - run: yarn build
-        working-directory: frontend
+        working-directory: ${{ steps.dir.outputs.path }}
         env:
           REACT_APP_WEB3FORMS_ACCESS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_ACCESS_KEY }}
           REACT_APP_CONTACT_MODE: web3forms
@@ -58,7 +69,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: frontend/build
+          path: ${{ steps.dir.outputs.path }}/build
 
   deploy:
     needs: build
