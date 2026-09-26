@@ -39,6 +39,30 @@ export default function Manifesto() {
             I'm Romano Galvan — a vibe coder who ships fast, communicates clearly,
             and treats every project like it's going up for an award.
           </p>
+
+          {/* Portrait cutout (transparent WebP, 89KB) — tilted polaroid style
+              with a hard offset frame behind it, pure neo-brutalism */}
+          <motion.div
+            initial={{ opacity: 0, y: 30, rotate: 0 }}
+            whileInView={{ opacity: 1, y: 0, rotate: -2 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="relative mt-10 max-w-sm"
+          >
+            {/* Offset frame that peeks out behind the photo */}
+            <div className="grid-bg absolute inset-0 translate-x-3 translate-y-3 border-2 border-foreground bg-accent/15" />
+            <img
+              src={`${process.env.PUBLIC_URL}/images/romano-portrait.webp`}
+              alt="Romano Galvan coding on his laptop with vibe coder stickers"
+              loading="lazy"
+              data-testid="manifesto-portrait"
+              className="relative w-full border-2 border-foreground bg-card"
+            />
+            {/* Little badge pinned on top, like tape on a polaroid */}
+            <span className="mono absolute -top-3 left-4 border-2 border-foreground bg-accent px-2.5 py-1 text-[10px] font-bold tracking-widest text-accent-foreground">
+              ROMANO // IRL
+            </span>
+          </motion.div>
         </motion.div>
 
         <div>
