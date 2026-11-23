@@ -1,20 +1,19 @@
 // ---------------------------------------------------------------
 // Geo-currency logic — one small module, used by the pricing grid.
 //
-// Priority order:
-//   1. "?cc=PH" in the URL  → testing/VPN override (never saved)
-//   2. Saved manual choice  → visitor clicked PHP/USD before
-//   3. Cloudflare edge lookup → PH = PHP, anything else = USD
-//   4. Any failure          → USD (site always works)
+// Production behavior:
+//   Cloudflare edge lookup → PH = PHP, anything else = USD.
+//   Any failure (offline, timeout, worker down) → USD.
+// There is NO manual currency selection and nothing is saved to
+// localStorage — detection runs fresh on every visit.
 //
-// Only MANUAL choices are saved. Automatic detection is never saved,
-// so it can never "lock in" a wrong guess.
+// The only exception: "?cc=PH" / "?cc=US" in the URL, a testing
+// override that works ONLY on development/testing hosts (never on
+// the production domain) and is never saved.
 // ---------------------------------------------------------------
 
 // The Cloudflare Worker URL. Empty = detection skipped, USD default.
 export const GEO_ENDPOINT = process.env.REACT_APP_GEO_ENDPOINT || "";
-
-const STORAGE_KEY = "rg-currency";
 
 // The ?cc= testing override only works on development/testing hosts —
 // it is completely disabled on the real production domain.
@@ -29,8 +28,8 @@ const isTestingHost = () => {
 };
 
 // Testing/VPN override: ?cc=PH in the URL simulates a country.
-// Deliberate (documented in cloudflare/README.md), highest priority,
-// never saved, and disabled on production domains.
+// Deliberate (documented in cloudflare/README.md), never saved,
+// and disabled on production domains.
 export function getForcedCurrency() {
   if (!isTestingHost()) return null;
   const forced = new URLSearchParams(window.location.search).get("cc");
@@ -38,24 +37,7 @@ export function getForcedCurrency() {
   return forced.toUpperCase() === "PH" ? "PHP" : "USD";
 }
 
-export function getManualCurrency() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved === "PHP" || saved === "USD" ? saved : null;
-  } catch {
-    return null; // private browsing etc.
-  }
-}
-
-export function saveManualCurrency(c) {
-  try {
-    localStorage.setItem(STORAGE_KEY, c);
-  } catch {
-    // storage unavailable — the choice still works for this session
-  }
-}
-
-// Detects the currency for a visitor with no saved manual choice.
+// Detects the visitor's currency via the Cloudflare edge worker.
 export async function detectCurrency() {
   const forced = getForcedCurrency();
   if (forced) return forced;

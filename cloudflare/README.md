@@ -12,19 +12,15 @@ Cloudflare's global network, not on any server you manage.
 Visitor opens site
       │
       ▼
-Does the visitor have a SAVED manual currency choice?  ── yes ──▶ show that
-      │ no
-      ▼
-Ask the Cloudflare Worker for the country code
+Ask the Cloudflare Worker for the visitor's country code
       │
-      ├─ "PH" ─────────────▶ PHP prices
-      ├─ anything else ────▶ USD prices
-      └─ worker unreachable ▶ USD prices (safe default, site never breaks)
+      ├─ "PH" ─────────────▶ ₱ PHP prices
+      ├─ anything else ────▶ $ USD prices
+      └─ worker unreachable ▶ $ USD prices (safe default, site never breaks)
 ```
 
-A saved manual choice is never overridden. Detection results are NOT saved —
-if the visitor later picks a currency by hand, that choice is remembered
-(localStorage) and respected forever until they change it.
+There is no manual currency switcher and nothing is stored in the visitor's
+browser — detection runs fresh on every visit.
 
 ## One-time setup (~10 minutes)
 
@@ -84,11 +80,12 @@ testing and is never saved:
 | `https://yoursite/pricing?cc=JP` | USD             |
 
 Other scenarios:
-- **Manual selection**: click PHP/USD, reload the page → your choice stays.
-- **Manual + detection**: with a saved choice, detection never overrides it.
 - **Worker down / offline**: prices fall back to USD, page still works.
 - **Shared CDN caching**: the worker answers `cache-control: no-store`, so no
   cache can ever serve one visitor's country to another visitor.
+- **Production safety**: the `?cc=` override only works on testing hosts
+  (localhost, *.github.io, *.workers.dev, Emergent preview). On
+  romanogalvan.com it is ignored completely.
 
 ## Privacy note
 The worker returns only a two-letter country code. It never sees, stores, or

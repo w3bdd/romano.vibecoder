@@ -2,35 +2,36 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
-import { BUSINESS, PACKAGES, CUSTOM_APP_USD_START } from "@/config/business";
-import { detectCurrency, getForcedCurrency, getManualCurrency, saveManualCurrency } from "@/config/geo";
+import { PACKAGES, CUSTOM_APP_USD_START } from "@/config/business";
+import { detectCurrency, getForcedCurrency } from "@/config/geo";
 
 // ---------------------------------------------------------------
 // Pricing grid — shared by the homepage pricing section and the
-// Pricing page. Prices are the APPROVED fixed figures from
-// config/business.js (PHP for the Philippines, fixed USD for
-// international — not conversions). Currency is chosen by (in
-// order): ?cc= test override (dev hosts only) → saved manual
-// choice → Cloudflare edge geolocation → USD fallback.
+// Pricing page. Currency is FULLY AUTOMATIC: the Cloudflare edge
+// worker reports the visitor's country (PH → ₱ PHP, everywhere else
+// → $ USD, failures → USD). There is no manual currency switcher
+// anywhere on the site. Prices are the approved fixed figures from
+// config/business.js — never conversions.
 // ---------------------------------------------------------------
 
 const formatRange = (min, max, symbol) =>
   max
-    ? `${symbol} ${min.toLocaleString()}–${max.toLocaleString()}`
-    : `${symbol} ${min.toLocaleString()}`;
+    ? `${symbol}${min.toLocaleString()}–${symbol}${max.toLocaleString()}`
+    : `${symbol}${min.toLocaleString()}`;
 
 const formatPrice = (p, currency) =>
   currency === "PHP"
-    ? formatRange(p.php, p.phpMax, "PHP")
-    : formatRange(p.usd, p.usdMax, "USD");
+    ? formatRange(p.php, p.phpMax, "₱")
+    : formatRange(p.usd, p.usdMax, "$");
 
 export default function PricingGrid({ showCta = true }) {
-  // Priority: ?cc= test override → saved manual choice → geo lookup.
-  // ("···" placeholder keeps the layout from jumping while we detect.)
-  const [currency, setCurrency] = useState(() => getForcedCurrency() || getManualCurrency());
+  // "?cc=" test override (dev hosts only) applies instantly; otherwise
+  // we wait briefly for the geo lookup — "···" prevents any wrong
+  // currency from flashing and keeps the layout perfectly still.
+  const [currency, setCurrency] = useState(() => getForcedCurrency());
 
   useEffect(() => {
-    if (currency) return; // a saved manual choice always wins — never override it
+    if (currency) return; // test override already decided
     let alive = true;
     detectCurrency().then((c) => {
       if (alive) setCurrency(c);
@@ -41,35 +42,21 @@ export default function PricingGrid({ showCta = true }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Clicking PHP/USD is a manual choice — remembered across visits.
-  const choose = (c) => {
-    saveManualCurrency(c);
-    setCurrency(c);
-  };
-
   return (
     <div>
-      {/* Currency switch — works before, during and after detection */}
+      {/* Passive indicator (not a switcher) — tells visitors which
+          market's pricing they're seeing */}
       <Reveal delay={0.05}>
-        <div
-          data-testid="pricing-currency-toggle"
-          className="inline-flex rounded-full border border-border p-1"
-          role="group"
-          aria-label="Pricing currency"
+        <p
+          data-testid="pricing-market-indicator"
+          className="mono inline-block rounded-full border border-border px-4 py-1.5 text-[11px] tracking-[0.15em] text-muted-foreground uppercase"
         >
-          {["PHP", "USD"].map((c) => (
-            <button
-              key={c}
-              data-testid={`currency-${c.toLowerCase()}`}
-              onClick={() => choose(c)}
-              className={`rounded-full px-5 py-1.5 text-sm font-semibold transition-colors ${
-                currency === c ? "bg-foreground text-background" : "text-muted-foreground"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
+          {currency
+            ? currency === "PHP"
+              ? "Pricing shown in ₱ PHP — Philippines"
+              : "Pricing shown in $ USD — International"
+            : "Detecting your region…"}
+        </p>
       </Reveal>
 
       <div className="mt-10 grid gap-5 sm:grid-cols-2">
@@ -111,8 +98,10 @@ export default function PricingGrid({ showCta = true }) {
           <h3 className="font-display text-2xl tracking-tight">Custom Web Application</h3>
           <p data-testid="pricing-custom-amount" className="font-display mt-3 text-xl tracking-tight">
             {currency === "USD"
-              ? `Starting at USD ${CUSTOM_APP_USD_START.toLocaleString()}`
-              : "Custom quotation"}
+              ? `Starting at $${CUSTOM_APP_USD_START.toLocaleString()}`
+              : currency === "PHP"
+                ? "Custom quotation"
+                : "···"}
           </p>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
             Custom quotation based on project scope and requirements — booking systems,
