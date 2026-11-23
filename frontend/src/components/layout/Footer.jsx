@@ -16,8 +16,15 @@ export default function Footer() {
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 md:grid-cols-3">
         {/* Brand + socials */}
         <div>
-          <p className="font-display text-lg font-semibold tracking-tight">
-            RomanoGalvan<span className="text-muted-foreground">.com</span>
+          <p className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight">
+            <img
+              src={`${process.env.PUBLIC_URL}/images/rg-monogram.png`}
+              alt="RG monogram"
+              className="h-8 w-8 rounded-full"
+            />
+            <span>
+              RomanoGalvan<span className="text-accent">.COM</span>
+            </span>
           </p>
           <p className="mt-2 text-sm text-muted-foreground">{BUSINESS.tagline}</p>
           <div className="mt-4 flex flex-wrap gap-4">

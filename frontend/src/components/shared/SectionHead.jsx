@@ -4,7 +4,7 @@ export default function SectionHead({ eyebrow, title, lead, center = false }) {
   return (
     <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
       {eyebrow && (
-        <p className="mono text-[11px] tracking-[0.25em] text-muted-foreground uppercase">
+        <p className="mono text-[11px] tracking-[0.25em] text-accent uppercase">
           {eyebrow}
         </p>
       )}

@@ -22,9 +22,16 @@ export default function Navbar({ dark, setDark }) {
         <Link
           to="/"
           data-testid="header-brand-logo"
-          className="font-display text-lg font-semibold tracking-tight"
+          className="flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight"
         >
-          RomanoGalvan<span className="text-muted-foreground">.com</span>
+          <img
+            src={`${process.env.PUBLIC_URL}/images/rg-monogram.png`}
+            alt="RG monogram"
+            className="h-8 w-8 rounded-full"
+          />
+          <span>
+            RomanoGalvan<span className="text-accent">.COM</span>
+          </span>
         </Link>
 
         {/* Desktop navigation */}

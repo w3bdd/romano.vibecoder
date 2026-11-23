@@ -173,7 +173,7 @@ export default function Contact() {
           <Reveal>
             <SectionHead
               eyebrow="Contact"
-              title="Have an Idea? Let's Bring It to Life."
+              title="Let's Create Something Exceptional."
               lead="Whether you're starting a new business, improving your existing website, or exploring a custom digital solution, let's discuss how we can help."
             />
           </Reveal>
