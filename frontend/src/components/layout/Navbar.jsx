@@ -33,8 +33,13 @@ export default function Navbar({ dark, setDark }) {
             alt="RG monogram"
             className="h-8 w-8 rounded-full"
           />
-          <span>
-            RomanoGalvan<span className="text-accent">.COM</span>
+          <span className="flex flex-col leading-tight">
+            <span className="uppercase">
+              RomanoGalvan<span className="text-accent">.COM</span>
+            </span>
+            <span className="mono mt-0.5 text-[8px] font-normal tracking-[0.16em] text-muted-foreground">
+              PREMIUM WEB EXPERIENCES. POWERFUL DIGITAL SOLUTIONS.
+            </span>
           </span>
         </Link>
 

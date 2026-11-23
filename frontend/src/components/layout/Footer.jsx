@@ -22,11 +22,15 @@ export default function Footer() {
               alt="RG monogram"
               className="h-8 w-8 rounded-full"
             />
-            <span>
-              RomanoGalvan<span className="text-accent">.COM</span>
+            <span className="flex flex-col leading-tight">
+              <span className="uppercase">
+                RomanoGalvan<span className="text-accent">.COM</span>
+              </span>
+              <span className="mono mt-0.5 text-[8px] font-normal tracking-[0.16em] text-muted-foreground">
+                PREMIUM WEB EXPERIENCES. POWERFUL DIGITAL SOLUTIONS.
+              </span>
             </span>
           </p>
-          <p className="mt-2 text-sm text-muted-foreground">{BUSINESS.tagline}</p>
           <div className="mt-4 flex flex-wrap gap-4">
             {BUSINESS.socials.map((s) => (
               <a

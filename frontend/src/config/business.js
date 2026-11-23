@@ -7,7 +7,10 @@ export const BUSINESS = {
   name: "RomanoGalvan.com",
   tagline: "Premium Web Experiences. Powerful Digital Solutions.",
   subTagline: "Design. Develop. Elevate.",
-  email: "romano.vibecoder@gmail.com",
+  // Public-facing contact email (shown on the site). Note: the inquiry
+  // form delivers to your Gmail via Web3Forms — that's configured
+  // separately by the access key, not by this address.
+  email: "info@romanogalvan.com",
   phoneDisplay: "+63 991 684 8388",
   whatsapp:
     "https://wa.me/639916848388?text=Hi%20Romano%2C%20I%27d%20like%20to%20discuss%20a%20project.",
