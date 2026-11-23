@@ -1,23 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
 import { BUSINESS, PACKAGES } from "@/config/business";
+import { detectCurrency, getForcedCurrency, getManualCurrency, saveManualCurrency } from "@/config/geo";
 
 // ---------------------------------------------------------------
 // Pricing grid — shared by the homepage pricing section and the
-// Pricing page. Philippine visitors (Manila timezone) see PHP by
-// default, everyone else sees approximate USD; both can switch
-// manually. Prices come from config/business.js — edit them there.
+// Pricing page. Currency is chosen by (in order): a saved manual
+// choice, the Cloudflare edge geolocation (?cc=XX test override
+// first), or USD as the safe default. Prices come from
+// config/business.js — edit them there, not here.
 // ---------------------------------------------------------------
-
-export function defaultCurrency() {
-  try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone === "Asia/Manila" ? "PHP" : "USD";
-  } catch {
-    return "PHP";
-  }
-}
 
 const formatPrice = (php, currency) =>
   currency === "PHP"
@@ -25,11 +19,31 @@ const formatPrice = (php, currency) =>
     : `≈ USD ${Math.round(php / BUSINESS.phpPerUsd).toLocaleString()}`;
 
 export default function PricingGrid({ showCta = true }) {
-  const [currency, setCurrency] = useState(defaultCurrency);
+  // Priority: ?cc= test override → saved manual choice → geo lookup.
+  // ("···" placeholder keeps the layout from jumping while we detect.)
+  const [currency, setCurrency] = useState(() => getForcedCurrency() || getManualCurrency());
+
+  useEffect(() => {
+    if (currency) return; // a saved manual choice always wins — never override it
+    let alive = true;
+    detectCurrency().then((c) => {
+      if (alive) setCurrency(c);
+    });
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Clicking PHP/USD is a manual choice — remembered across visits.
+  const choose = (c) => {
+    saveManualCurrency(c);
+    setCurrency(c);
+  };
 
   return (
     <div>
-      {/* Currency switch — PHP for local clients, USD for international */}
+      {/* Currency switch — works before, during and after detection */}
       <Reveal delay={0.05}>
         <div
           data-testid="pricing-currency-toggle"
@@ -41,7 +55,7 @@ export default function PricingGrid({ showCta = true }) {
             <button
               key={c}
               data-testid={`currency-${c.toLowerCase()}`}
-              onClick={() => setCurrency(c)}
+              onClick={() => choose(c)}
               className={`rounded-full px-5 py-1.5 text-sm font-semibold transition-colors ${
                 currency === c ? "bg-foreground text-background" : "text-muted-foreground"
               }`}
@@ -66,9 +80,9 @@ export default function PricingGrid({ showCta = true }) {
                 </span>
                 <span
                   data-testid={`pricing-amount-${i + 1}`}
-                  className="font-display mt-1 block text-3xl tracking-tight"
+                  className="font-display mt-1 block min-h-[2.5rem] text-3xl tracking-tight"
                 >
-                  {formatPrice(p.php, currency)}
+                  {currency ? formatPrice(p.php, currency) : "···"}
                 </span>
               </p>
               {p.note && <p className="mt-2 text-xs text-muted-foreground">{p.note}</p>}

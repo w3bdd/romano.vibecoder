@@ -1,0 +1,6 @@
+# Cloudflare Worker settings for the geo-country endpoint.
+# "main" points at the worker script; the name becomes part of its URL:
+#   https://geo-country.<your-cloudflare-subdomain>.workers.dev
+name = "geo-country"
+main = "geo-country-worker.js"
+compatibility_date = "2025-01-01"

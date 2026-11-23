@@ -33,6 +33,7 @@ A personal portfolio website (more website than web app) for Romano Galvan, a vi
 - Full SEO layer: per-page titles/descriptions/canonical/OG, sitemap.xml, robots.txt, JSON-LD structured data, optional GA4 via %REACT_APP_GA_ID% build var
 - Theme: light/dark switcher in nav, OS-preference first visit, localStorage persist, no flash, smooth transitions, 3D scene lighting is theme-aware
 - Backend extended for full inquiry fields; honeypot + rate limit preserved; success toast only on confirmed delivery
+- GEOLOCATION PRICING (Phase 11): Cloudflare Worker /app/cloudflare/geo-country-worker.js (+wrangler.toml, README guide) returns only ISO country code with cache-control: no-store; frontend module /app/frontend/src/config/geo.js — priority: ?cc=XX test override (never saved) → saved manual choice (localStorage rg-currency) → edge lookup (PH=PHP, else USD, 2.5s timeout) → USD fallback; endpoint via REACT_APP_GEO_ENDPOINT (empty in preview = USD default). PricingGrid + home pricing section use it
 - Old neo-brutalist single-page components removed (replaced by this redesign)
 
 ## Implemented (v1, earlier sessions — superseded)
