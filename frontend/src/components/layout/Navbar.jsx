@@ -16,7 +16,11 @@ export default function Navbar({ dark, setDark }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+    // The overlay menu must be OUTSIDE the header: the header's backdrop
+    // blur would otherwise trap the menu's fixed positioning inside the
+    // 64px-tall bar instead of covering the whole screen.
+    <>
+      <header className="fixed top-0 inset-x-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         {/* Brand */}
         <Link
@@ -83,8 +87,10 @@ export default function Navbar({ dark, setDark }) {
           </button>
         </div>
       </div>
+      </header>
 
-      {/* Mobile full-screen menu */}
+      {/* Mobile full-screen menu — semi-translucent so the page glows
+          through behind a heavy blur; padded below the fixed header bar */}
       <AnimatePresence>
         {open && (
           <motion.nav
@@ -92,7 +98,7 @@ export default function Navbar({ dark, setDark }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="lg:hidden fixed inset-0 top-0 z-40 flex flex-col items-center justify-center gap-2 bg-background"
+            className="lg:hidden fixed inset-0 z-40 flex flex-col items-center justify-center gap-2 bg-background/85 pt-16 backdrop-blur-xl"
           >
             {LINKS.map((l, i) => (
               <motion.div
@@ -115,6 +121,6 @@ export default function Navbar({ dark, setDark }) {
           </motion.nav>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
