@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
 import { PACKAGES, CUSTOM_APP_USD_START } from "@/config/business";
-import { detectCurrency, getForcedCurrency } from "@/config/geo";
+import { useCurrency } from "@/config/currency";
 
 // ---------------------------------------------------------------
 // Pricing grid — shared by the homepage pricing section and the
-// Pricing page. Currency is FULLY AUTOMATIC: the Cloudflare edge
-// worker reports the visitor's country (PH → ₱ PHP, everywhere else
-// → $ USD, failures → USD). There is no manual currency switcher
-// anywhere on the site. Prices are the approved fixed figures from
-// config/business.js — never conversions.
+// Pricing page. Currency comes from the GLOBAL currency service
+// (config/currency.jsx — one detection for the whole site).
+// PERMANENT CORE FEATURE: never add local currency logic here.
+// See /CURRENCY_GOVERNANCE.md.
+// Prices are the approved fixed figures from config/business.js.
 // ---------------------------------------------------------------
 
 const formatRange = (min, max, symbol) =>
@@ -25,22 +24,10 @@ const formatPrice = (p, currency) =>
     : formatRange(p.usd, p.usdMax, "$");
 
 export default function PricingGrid({ showCta = true }) {
-  // "?cc=" test override (dev hosts only) applies instantly; otherwise
-  // we wait briefly for the geo lookup — "···" prevents any wrong
-  // currency from flashing and keeps the layout perfectly still.
-  const [currency, setCurrency] = useState(() => getForcedCurrency());
-
-  useEffect(() => {
-    if (currency) return; // test override already decided
-    let alive = true;
-    detectCurrency().then((c) => {
-      if (alive) setCurrency(c);
-    });
-    return () => {
-      alive = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Global currency state — null briefly means "still detecting";
+  // the "···" placeholder prevents any wrong currency from flashing
+  // and keeps the layout perfectly still.
+  const currency = useCurrency();
 
   return (
     <div>

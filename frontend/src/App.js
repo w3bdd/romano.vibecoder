@@ -4,6 +4,7 @@ import Lenis from "lenis";
 import { Toaster } from "sonner";
 import "@/App.css";
 import { useTheme } from "@/theme";
+import { CurrencyProvider } from "@/config/currency";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Home from "@/pages/Home";
@@ -48,20 +49,24 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="min-h-screen bg-background text-foreground antialiased">
-        <Navbar dark={dark} setDark={setDark} />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home dark={dark} />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      {/* PERMANENT: one global currency detection for the whole site.
+          See /CURRENCY_GOVERNANCE.md — do not remove. */}
+      <CurrencyProvider>
+        <div className="min-h-screen bg-background text-foreground antialiased">
+          <Navbar dark={dark} setDark={setDark} />
+          <main>
+            <Routes>
+              <Route path="/" element={<Home dark={dark} />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </CurrencyProvider>
       {/* Toast popups (bottom-right) confirm form sends and copy actions */}
       <Toaster position="bottom-right" theme={dark ? "dark" : "light"} />
     </BrowserRouter>
