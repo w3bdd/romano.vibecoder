@@ -50,13 +50,22 @@ https://geo-country.your-subdomain.workers.dev
 Test it in your browser — you should see `{"country":"PH"}` (or your country).
 
 ### 4. Tell the website where to ask
-In `frontend/.env`, set:
+
+There are two places, depending on environment:
+
+**A. Emergent preview environment** — open `frontend/.env` and set:
 ```
 REACT_APP_GEO_ENDPOINT=https://geo-country.your-subdomain.workers.dev
 ```
-Then rebuild/redeploy the site (push to GitHub — the Actions robot rebuilds,
-and injects the same variable there by adding it under the workflow's `env:`
-block in `.github/workflows/deploy.yml`, or as a repository **variable**).
+(Or ask the Emergent agent to set `REACT_APP_GEO_ENDPOINT` for you — it is
+a build-time frontend variable, safe to be public.)
+
+**B. Production (GitHub Pages via the Actions robot)** — in your GitHub repo:
+**Settings → Secrets and variables → Actions → Variables tab →
+New repository variable** — Name: `REACT_APP_GEO_ENDPOINT`, Value: your
+worker URL. The deploy workflow already injects it into every build.
+
+Then rebuild/redeploy (push to GitHub, or the Emergent preview hot-reloads).
 
 ### 5. Optional but recommended: run it on your own domain
 Workers → your worker → Settings → Triggers → Custom Domains → add

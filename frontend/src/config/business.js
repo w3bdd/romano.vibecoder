@@ -22,16 +22,16 @@ export const BUSINESS = {
     { name: "GitHub", url: "https://github.com/w3bdd" },
     { name: "LinkedIn", url: "https://www.linkedin.com/in/vibecoder4117" },
   ],
-  // USD figures on the pricing page are approximate conversions only,
-  // shown for international visitors. Update the rate occasionally.
-  phpPerUsd: 58,
 };
 
+// APPROVED PRICING — do not change these values without authorization.
+// Philippine visitors see PHP; international visitors see the fixed USD
+// figures (they are approved prices, NOT currency conversions).
 export const PACKAGES = [
   {
     name: "Starter Website",
-    php: 7500,
-    note: null,
+    php: 7500, phpMax: null,
+    usd: 250, usdMax: null,
     features: [
       "Single-page website",
       "Responsive design",
@@ -43,8 +43,8 @@ export const PACKAGES = [
   },
   {
     name: "Professional Website",
-    php: 15000,
-    note: null,
+    php: 15000, phpMax: null,
+    usd: 500, usdMax: null,
     features: [
       "Up to five pages",
       "Custom website design",
@@ -57,8 +57,8 @@ export const PACKAGES = [
   },
   {
     name: "Premium Website",
-    php: 25000,
-    note: null,
+    php: 25000, phpMax: null,
+    usd: 900, usdMax: null,
     features: [
       "Up to eight pages",
       "Advanced visual design",
@@ -71,8 +71,8 @@ export const PACKAGES = [
   },
   {
     name: "3D Interactive Experience",
-    php: 35000,
-    note: "Typical project range: PHP 35,000–60,000.",
+    php: 35000, phpMax: 60000,
+    usd: 1200, usdMax: 2000,
     features: [
       "Premium interactive design",
       "Selected 3D elements",
@@ -83,6 +83,10 @@ export const PACKAGES = [
     ideal: "Ideal for brands seeking distinctive digital experiences.",
   },
 ];
+
+// Custom web applications: custom quotation in PHP market;
+// international projects start at USD 1,500.
+export const CUSTOM_APP_USD_START = 1500;
 
 // Sample projects — real live sites, clearly labeled as self-initiated
 // demonstration work (no invented clients, results, or testimonials).

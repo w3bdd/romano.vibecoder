@@ -2,21 +2,27 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/shared/Reveal";
-import { BUSINESS, PACKAGES } from "@/config/business";
+import { BUSINESS, PACKAGES, CUSTOM_APP_USD_START } from "@/config/business";
 import { detectCurrency, getForcedCurrency, getManualCurrency, saveManualCurrency } from "@/config/geo";
 
 // ---------------------------------------------------------------
 // Pricing grid — shared by the homepage pricing section and the
-// Pricing page. Currency is chosen by (in order): a saved manual
-// choice, the Cloudflare edge geolocation (?cc=XX test override
-// first), or USD as the safe default. Prices come from
-// config/business.js — edit them there, not here.
+// Pricing page. Prices are the APPROVED fixed figures from
+// config/business.js (PHP for the Philippines, fixed USD for
+// international — not conversions). Currency is chosen by (in
+// order): ?cc= test override (dev hosts only) → saved manual
+// choice → Cloudflare edge geolocation → USD fallback.
 // ---------------------------------------------------------------
 
-const formatPrice = (php, currency) =>
+const formatRange = (min, max, symbol) =>
+  max
+    ? `${symbol} ${min.toLocaleString()}–${max.toLocaleString()}`
+    : `${symbol} ${min.toLocaleString()}`;
+
+const formatPrice = (p, currency) =>
   currency === "PHP"
-    ? `PHP ${php.toLocaleString()}`
-    : `≈ USD ${Math.round(php / BUSINESS.phpPerUsd).toLocaleString()}`;
+    ? formatRange(p.php, p.phpMax, "PHP")
+    : formatRange(p.usd, p.usdMax, "USD");
 
 export default function PricingGrid({ showCta = true }) {
   // Priority: ?cc= test override → saved manual choice → geo lookup.
@@ -82,10 +88,9 @@ export default function PricingGrid({ showCta = true }) {
                   data-testid={`pricing-amount-${i + 1}`}
                   className="font-display mt-1 block min-h-[2.5rem] text-3xl tracking-tight"
                 >
-                  {currency ? formatPrice(p.php, currency) : "···"}
+                  {currency ? formatPrice(p, currency) : "···"}
                 </span>
               </p>
-              {p.note && <p className="mt-2 text-xs text-muted-foreground">{p.note}</p>}
               <ul className="mt-6 flex-1 space-y-2">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-muted-foreground">
@@ -104,6 +109,11 @@ export default function PricingGrid({ showCta = true }) {
       <Reveal delay={0.08}>
         <div className="mt-5 rounded-xl border border-border bg-muted/50 p-7 sm:p-9 text-center">
           <h3 className="font-display text-2xl tracking-tight">Custom Web Application</h3>
+          <p data-testid="pricing-custom-amount" className="font-display mt-3 text-xl tracking-tight">
+            {currency === "USD"
+              ? `Starting at USD ${CUSTOM_APP_USD_START.toLocaleString()}`
+              : "Custom quotation"}
+          </p>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
             Custom quotation based on project scope and requirements — booking systems,
             dashboards, workflow tools, integrations and more.
@@ -117,7 +127,7 @@ export default function PricingGrid({ showCta = true }) {
           All prices are starting estimates. Final quotations depend on project requirements,
           functionality, content, integrations and development scope. Hosting, domains,
           third-party services and ongoing maintenance are quoted separately unless expressly
-          included.{currency === "USD" && ` USD figures are approximate conversions at ₱${BUSINESS.phpPerUsd} = $1, for reference only.`}
+          included.
         </p>
       </Reveal>
 

@@ -16,10 +16,23 @@ export const GEO_ENDPOINT = process.env.REACT_APP_GEO_ENDPOINT || "";
 
 const STORAGE_KEY = "rg-currency";
 
+// The ?cc= testing override only works on development/testing hosts —
+// it is completely disabled on the real production domain.
+const isTestingHost = () => {
+  const h = window.location.hostname;
+  return (
+    h === "localhost" ||
+    h.endsWith(".github.io") ||
+    h.endsWith(".workers.dev") ||
+    h.endsWith(".preview.emergentagent.com")
+  );
+};
+
 // Testing/VPN override: ?cc=PH in the URL simulates a country.
 // Deliberate (documented in cloudflare/README.md), highest priority,
-// and never saved — so it can't pollute anyone's real preference.
+// never saved, and disabled on production domains.
 export function getForcedCurrency() {
+  if (!isTestingHost()) return null;
   const forced = new URLSearchParams(window.location.search).get("cc");
   if (!forced) return null;
   return forced.toUpperCase() === "PH" ? "PHP" : "USD";

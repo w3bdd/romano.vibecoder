@@ -64,6 +64,9 @@ jobs:
           REACT_APP_WEB3FORMS_ACCESS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_ACCESS_KEY }}
           REACT_APP_CONTACT_MODE: web3forms
           REACT_APP_BACKEND_URL: ""
+          # Geo-pricing worker URL — stored as a repository VARIABLE
+          # (Settings → Secrets and variables → Actions → Variables tab)
+          REACT_APP_GEO_ENDPOINT: ${{ vars.REACT_APP_GEO_ENDPOINT }}
 
       # Hand the built files to GitHub Pages
       - uses: actions/configure-pages@v5
