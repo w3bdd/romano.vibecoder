@@ -11,7 +11,14 @@ A personal portfolio website (more website than web app) for Romano Galvan, a vi
 - Founders looking for contract/freelance web help
 - Visitors reviewing work before contacting
 
-## Architecture (v2)
+## Architecture (v2 + Revision 02 "Platinum Sculptural Luxury")
+- Typography: DM Serif Display (editorial headlines) + Manrope (body) + JetBrains Mono (labels)
+- Hero: "Meridian" sculpture — custom ParametricGeometry fluid platinum ribbon (meshPhysicalMaterial clearcoat) folding through brushed-aluminum slab; entrance ease-in (smoothstep 1.8s), cursor parallax, scroll-driven rotation + camera drift (contained to hero, no scroll-jacking), wrapper fade-out via framer-motion useScroll; procedural Lightformer studio (no external HDR)
+- Motion: framer-motion only (GSAP deliberately not installed — equivalent capability exists); Magnetic hover on hero/CTA buttons
+- Homepage order: Hero → Introduction → Selected Work (editorial alternating rows) → Services (oversized numbered rows) → Why Us → Process → CTA
+- Shared data: PROJECTS + PACKAGES in /app/frontend/src/config/business.js
+- Pages/Services + Portfolio rewritten as editorial layouts; Pricing/About/Contact inherit new type system
+- Theme/router/SEO/3D guards/backend dual-mode inquiry: unchanged from v2 (see below)
 - Frontend: React (CRA/craco) + react-router-dom (6 pages), Tailwind, framer-motion (reveals), lenis (smooth scroll), Three.js via @react-three/fiber + drei (chrome torus-knot hero, lazy-loaded, procedural Lightformer studio env, no external HDR), sonner toasts
 - Theme: flash-free boot script in index.html (localStorage rg-theme → OS preference), `.dark` class on <html>, palettes per brand spec (light #F5F3EF ivory / dark #111111 studio, metallic #C5C5C5/#D5D5D5), Fraunces + Manrope + JetBrains Mono
 - 3D guards: reduced-motion → static metallic disc fallback; no WebGL → same fallback; mobile → lower geometry + dpr cap

@@ -80,3 +80,40 @@ export const PACKAGES = [
     ideal: "Ideal for brands seeking distinctive digital experiences.",
   },
 ];
+
+// Sample projects — real live sites, clearly labeled as self-initiated
+// demonstration work (no invented clients, results, or testimonials).
+export const PROJECTS = [
+  {
+    name: "CleverHouse Philippines",
+    category: "Business Website — Smart Home & Solar",
+    desc: "Company website for a smart home, CCTV, solar, and electrical engineering provider serving Aurora and Central Luzon.",
+    tech: ["React", "Responsive Design", "GitHub Pages"],
+    url: "https://w3bdd.github.io/cleverhouse.ph/",
+    monogram: "C",
+  },
+  {
+    name: "RenovaLife Dialysis Center",
+    category: "Business Website — Healthcare",
+    desc: "Website for a PhilHealth-accredited dialysis center focused on dignity, comfort, and human-centered healing.",
+    tech: ["React", "Responsive Design", "GitHub Pages"],
+    url: "https://w3bdd.github.io/renovalife.ph/",
+    monogram: "R",
+  },
+  {
+    name: "Aureon Architecture & Builders",
+    category: "Business Website — Architecture & Construction",
+    desc: "Website for a family-owned architectural and construction firm serving Central Luzon and beyond since 2016.",
+    tech: ["React", "Responsive Design", "GitHub Pages"],
+    url: "https://w3bdd.github.io/aureon.ar/",
+    monogram: "A",
+  },
+  {
+    name: "CoreGridX Technologies",
+    category: "Business Website — IT Infrastructure",
+    desc: "Corporate website for a firm designing, deploying, securing, and managing server, network, and data center environments.",
+    tech: ["React", "Responsive Design", "GitHub Pages"],
+    url: "https://w3bdd.github.io/coregridx.it/",
+    monogram: "X",
+  },
+];

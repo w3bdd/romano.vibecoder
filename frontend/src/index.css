@@ -1,6 +1,6 @@
-/* Fonts: Fraunces = premium display serif for headlines,
+/* Fonts: DM Serif Display = expressive editorial headlines,
    Manrope = clean body text, JetBrains Mono = small technical labels. */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -76,7 +76,7 @@
 @layer utilities {
     /* Premium serif for headlines */
     .font-display {
-        font-family: 'Fraunces', serif;
+        font-family: 'DM Serif Display', serif;
     }
     /* Small technical labels */
     .mono {

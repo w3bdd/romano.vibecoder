@@ -8,7 +8,7 @@ const SERVICES = [
   {
     n: "01",
     title: "Website Design & Development",
-    desc: "Beautiful, responsive websites built around your brand, your customers, and your business objectives.",
+    desc: "Beautiful, responsive websites built around your brand, your customers and your business objectives.",
     deliverables: [
       "Business websites",
       "Corporate websites",
@@ -21,7 +21,7 @@ const SERVICES = [
   {
     n: "02",
     title: "Web Applications & Systems",
-    desc: "Custom-built digital tools that simplify operations, improve workflows, and support business growth.",
+    desc: "Custom-built digital tools that simplify operations, improve workflows and support business growth.",
     deliverables: [
       "Custom web applications",
       "Booking and reservation systems",
@@ -34,7 +34,7 @@ const SERVICES = [
   {
     n: "03",
     title: "Interactive 3D Experiences",
-    desc: "Distinctive websites featuring immersive visuals, refined motion, and engaging interactions.",
+    desc: "Distinctive websites featuring immersive visuals, refined motion and engaging interactions.",
     deliverables: [
       "Interactive 3D hero sections",
       "Three-dimensional product presentations",
@@ -46,7 +46,7 @@ const SERVICES = [
   {
     n: "04",
     title: "Website Optimization & Maintenance",
-    desc: "Keep your website secure, updated, accessible, and performing at its best.",
+    desc: "Keep your website secure, updated, accessible and performing at its best.",
     deliverables: [
       "Website redesign",
       "Performance optimization",
@@ -79,36 +79,46 @@ export default function Services() {
         </div>
       </section>
 
+      {/* Oversized numbered editorial rows — no generic card grids */}
       <section className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-          <div className="grid gap-5 md:grid-cols-2">
+        <div className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
+          <div className="divide-y divide-border">
             {SERVICES.map((s, i) => (
-              <Reveal key={s.n} delay={i * 0.06}>
+              <Reveal key={s.n} delay={i * 0.04}>
                 <article
                   data-testid={`service-detail-${s.n}`}
-                  className="lux-lift h-full rounded-xl border border-border bg-card p-7 sm:p-9 lux-shadow"
+                  className="group grid gap-6 py-10 sm:py-14 lg:grid-cols-[auto_1fr_1.1fr] lg:gap-12"
                 >
-                  <span className="mono text-xs text-muted-foreground">SERVICE {s.n}</span>
-                  <h2 className="font-display mt-3 text-2xl font-medium tracking-tight">{s.title}</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
-                  <p className="mono mt-6 text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
-                    Deliverables may include
-                  </p>
-                  <ul className="mt-3 space-y-2">
-                    {s.deliverables.map((d) => (
-                      <li key={d} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                        <span className="mt-2 h-px w-4 shrink-0 bg-foreground/40" />
-                        {d}
-                      </li>
-                    ))}
-                  </ul>
+                  {/* Oversized ghost number */}
+                  <span className="font-display select-none text-7xl sm:text-8xl leading-none text-foreground/10 transition-colors duration-500 group-hover:text-foreground/25">
+                    {s.n}
+                  </span>
+                  <div>
+                    <h2 className="font-display text-2xl sm:text-3xl tracking-tight">{s.title}</h2>
+                    <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
+                      {s.desc}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="mono text-[11px] tracking-[0.2em] text-muted-foreground uppercase">
+                      Deliverables may include
+                    </p>
+                    <ul className="mt-3 space-y-2">
+                      {s.deliverables.map((d) => (
+                        <li key={d} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                          <span className="mt-2 h-px w-4 shrink-0 bg-foreground/40" />
+                          {d}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </article>
               </Reveal>
             ))}
           </div>
 
-          <Reveal delay={0.1}>
-            <div className="mt-14 text-center">
+          <Reveal delay={0.08}>
+            <div className="py-14 text-center">
               <Link
                 to="/contact"
                 data-testid="services-cta"

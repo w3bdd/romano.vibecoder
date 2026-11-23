@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 // The 3D scene is loaded lazily — the Three.js code downloads in the
 // background AFTER the page's text and buttons are already usable.
@@ -23,9 +24,9 @@ function useCanRender3D() {
   return ok;
 }
 
-// Elegant static stand-in: a soft metallic glow disc. Used while the 3D
-// scene downloads, and permanently if WebGL is unavailable or the visitor
-// prefers reduced motion — the site stays fully usable either way.
+// Elegant static stand-in: a soft metallic glow. Used while the 3D scene
+// downloads, and permanently if WebGL is unavailable or the visitor prefers
+// reduced motion — the site stays fully usable either way.
 function StaticFallback() {
   return (
     <div
@@ -44,11 +45,23 @@ export default function HeroVisual({ dark }) {
   const can3D = useCanRender3D();
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
+  // As the hero scrolls out of view, the whole scene drifts and fades —
+  // a gentle handover to the rest of the page, no scroll-jacking.
+  const wrapRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start start", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const opacity = useTransform(scrollYProgress, [0, 0.9], [1, 0]);
+
   if (!can3D) return <StaticFallback />;
 
   return (
-    <Suspense fallback={<StaticFallback />}>
-      <HeroScene dark={dark} isMobile={isMobile} />
-    </Suspense>
+    <motion.div ref={wrapRef} style={{ y, opacity }} className="h-full w-full">
+      <Suspense fallback={<StaticFallback />}>
+        <HeroScene dark={dark} isMobile={isMobile} />
+      </Suspense>
+    </motion.div>
   );
 }
