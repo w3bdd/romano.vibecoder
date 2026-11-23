@@ -53,6 +53,8 @@ class ContactMessage(BaseModel):
     country: str = Field(default="", max_length=80)
     projectType: str = Field(default="Not specified", max_length=60)
     budget: str = Field(default="Not specified", max_length=60)
+    budgetCurrency: str = Field(default="", max_length=3)      # currency the visitor saw (PHP/USD)
+    detectedCountry: str = Field(default="", max_length=8)     # geo metadata, not a detection source
     timeline: str = Field(default="Not specified", max_length=60)
     contactMethod: str = Field(default="Email", max_length=30)
     message: str = Field(min_length=10, max_length=5000)
@@ -84,6 +86,8 @@ def deliver_email(msg: ContactMessage) -> bool:
         f"Country:  {msg.country or '—'}\n"
         f"Type:     {msg.projectType}\n"
         f"Budget:   {msg.budget}\n"
+        f"Currency: {msg.budgetCurrency or '—'}\n"
+        f"Detected: {msg.detectedCountry or '—'}\n"
         f"Timeline: {msg.timeline}\n"
         f"Contact:  {msg.contactMethod}\n\n"
         f"{msg.message}\n"
@@ -138,6 +142,8 @@ async def submit_contact(msg: ContactMessage, request: Request):
         "country": msg.country,
         "projectType": msg.projectType,
         "budget": msg.budget,
+        "budgetCurrency": msg.budgetCurrency,
+        "detectedCountry": msg.detectedCountry,
         "timeline": msg.timeline,
         "contactMethod": msg.contactMethod,
         "message": msg.message,

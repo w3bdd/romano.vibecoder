@@ -88,6 +88,29 @@ export const PACKAGES = [
 // international projects start at USD 1,500.
 export const CUSTOM_APP_USD_START = 1500;
 
+// APPROVED BUDGET RANGES — the Estimated Budget options in inquiry
+// forms. Centralized here (next to the package prices) per the Global
+// Currency Architecture: forms read BUDGET_RANGES[currency] and must
+// never define their own ranges. Values are display+submit strings.
+export const BUDGET_RANGES = {
+  PHP: [
+    "Below ₱10,000",
+    "₱10,000–₱25,000",
+    "₱25,001–₱50,000",
+    "₱50,001–₱100,000",
+    "₱100,001–₱250,000",
+    "Above ₱250,000",
+  ],
+  USD: [
+    "Below $250",
+    "$250–$500",
+    "$501–$1,000",
+    "$1,001–$2,000",
+    "$2,001–$5,000",
+    "Above $5,000",
+  ],
+};
+
 // Sample projects — real live sites, clearly labeled as self-initiated
 // demonstration work (no invented clients, results, or testimonials).
 export const PROJECTS = [

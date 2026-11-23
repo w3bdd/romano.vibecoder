@@ -20,9 +20,13 @@ currency works on this website.
 
 | Piece | File | Job |
 |---|---|---|
-| Detection service | `frontend/src/config/geo.js` | Talks to the Cloudflare Worker, returns "PHP" or "USD" |
-| Global state | `frontend/src/config/currency.jsx` | ONE detection per visit, shared with every component via `useCurrency()` |
-| Price data | `frontend/src/config/business.js` | The approved PHP and USD prices, ranges, and custom-app starting price |
+| Detection service | `frontend/src/config/geo.js` | Talks to the Cloudflare Worker, returns `{ country, currency }` |
+| Global state | `frontend/src/config/currency.jsx` | ONE detection per visit, shared with every component via `useGeo()` / `useCurrency()` |
+| Price data | `frontend/src/config/business.js` | The approved PHP and USD prices, `BUDGET_RANGES`, and custom-app starting price |
+
+The detected **country code is metadata only** (carried by `useGeo()` for
+inquiry submissions). It must never be used as a second currency source —
+currency is derived once, inside `geo.js`, and stays the single truth.
 
 The Cloudflare Worker (`cloudflare/geo-country-worker.js`) returns only the
 visitor's country code with `cache-control: no-store`. It is deployed once
@@ -34,6 +38,12 @@ and shared by preview and production:
 - Any new pricing feature, quotation form, budget field, or price display
   **must** read currency from `useCurrency()` (config/currency.jsx) and
   prices from `config/business.js`.
+- **Budget ranges** (Estimated Budget fields in inquiry/quotation forms)
+  must come from `BUDGET_RANGES` in `config/business.js` — never define
+  ranges inside a form component.
+- **Submissions** that include a budget must also include the currency the
+  visitor saw (`budgetCurrency`) and the detected country metadata
+  (`detectedCountry`) so a USD budget can never be read as PHP.
 - **Never** hardcode currency symbols, detection calls, or price values in
   individual components.
 - **Never** reintroduce a manual currency selector or localStorage currency
@@ -48,6 +58,7 @@ and shared by preview and production:
 
 1. Visit `/pricing?cc=PH` on a testing host → all prices ₱, indicator reads Philippines.
 2. Visit `/pricing?cc=US` → all prices $, indicator reads International.
-3. Block `geo-country.romanogalvan.workers.dev` in DevTools → prices fall back to USD.
-4. Confirm no PHP/USD toggle exists anywhere.
-5. Repeat in light and dark mode, on desktop and mobile.
+3. Visit `/contact?cc=PH` → Estimated Budget shows ₱ ranges; `/contact?cc=US` → $ ranges.
+4. Block `geo-country.romanogalvan.workers.dev` in DevTools → prices and budgets fall back to USD.
+5. Confirm no PHP/USD toggle exists anywhere.
+6. Repeat in light and dark mode, on desktop and mobile.

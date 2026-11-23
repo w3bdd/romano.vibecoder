@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { detectCurrency, getForcedCurrency } from "@/config/geo";
+import { detectGeo, getForcedCountry } from "@/config/geo";
 
 // ---------------------------------------------------------------
 // PERMANENT CORE FEATURE — Global Currency State
@@ -21,13 +21,16 @@ const CurrencyContext = createContext(null); // null = still detecting
 
 export function CurrencyProvider({ children }) {
   // "?cc=" test override (dev/testing hosts only) applies instantly.
-  const [currency, setCurrency] = useState(() => getForcedCurrency());
+  const [geo, setGeo] = useState(() => {
+    const forced = getForcedCountry();
+    return forced ? { country: forced, currency: forced === "PH" ? "PHP" : "USD" } : null;
+  });
 
   useEffect(() => {
-    if (currency) return; // test override already decided
+    if (geo) return; // test override already decided
     let alive = true;
-    detectCurrency().then((c) => {
-      if (alive) setCurrency(c);
+    detectGeo().then((g) => {
+      if (alive) setGeo(g);
     });
     return () => {
       alive = false;
@@ -35,10 +38,17 @@ export function CurrencyProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <CurrencyContext.Provider value={currency}>{children}</CurrencyContext.Provider>;
+  return <CurrencyContext.Provider value={geo}>{children}</CurrencyContext.Provider>;
 }
 
 // Every pricing/budget/quotation component must use this hook.
+// Returns the geo state: { country, currency } or null while detecting.
+export function useGeo() {
+  return useContext(CurrencyContext);
+}
+
+// Convenience: just the currency — "PHP" | "USD" | null (detecting).
 export function useCurrency() {
-  return useContext(CurrencyContext); // "PHP" | "USD" | null (detecting)
+  const geo = useContext(CurrencyContext);
+  return geo ? geo.currency : null;
 }

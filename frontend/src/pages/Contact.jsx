@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Mail, MessageCircle, MapPin, Send } from "lucide-react";
 import Seo from "@/components/shared/Seo";
 import Reveal from "@/components/shared/Reveal";
 import SectionHead from "@/components/shared/SectionHead";
-import { BUSINESS } from "@/config/business";
+import { BUSINESS, BUDGET_RANGES } from "@/config/business";
+import { useGeo } from "@/config/currency";
 
 // ---------------------------------------------------------------
 // Inquiry delivery. Two modes, chosen by REACT_APP_CONTACT_MODE:
@@ -32,15 +33,6 @@ const PROJECT_TYPES = [
   "Website redesign",
   "Maintenance and optimization",
   "Other",
-];
-
-const BUDGETS = [
-  "Below PHP 10,000",
-  "PHP 10,000–25,000",
-  "PHP 25,000–50,000",
-  "PHP 50,000–100,000",
-  "Above PHP 100,000",
-  "International / custom budget",
 ];
 
 const TIMELINES = ["As soon as possible", "Within 1 month", "1–3 months", "Flexible"];
@@ -98,6 +90,23 @@ export default function Contact() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [sending, setSending] = useState(false);
 
+  // Global geo state — one detection for the whole site. The budget
+  // field reads the SAME result; nothing is detected locally.
+  const geo = useGeo(); // { country, currency } | null (detecting)
+  const currency = geo ? geo.currency : null;
+  const budgets = currency ? BUDGET_RANGES[currency] : [];
+
+  // If the visitor picked a budget before detection finished and the
+  // resolved currency differs, the stale pick would silently mean the
+  // wrong currency — clear it so they re-pick from the right ranges.
+  const prevCurrency = useRef(currency);
+  useEffect(() => {
+    if (prevCurrency.current && currency && prevCurrency.current !== currency) {
+      setForm((f) => (f.budget ? { ...f, budget: "" } : f));
+    }
+    prevCurrency.current = currency;
+  }, [currency]);
+
   const update = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const submit = async (e) => {
@@ -113,9 +122,17 @@ export default function Contact() {
 
     setSending(true);
     try {
+      // Currency + detected country travel with every submission so the
+      // budget can never be silently reinterpreted later. The country is
+      // metadata from the single geo detection — never a detection source.
+      const payload = {
+        ...form,
+        budgetCurrency: currency || "USD",
+        detectedCountry: geo?.country || "Unknown",
+      };
       if (CONTACT_MODE === "smtp") {
         // VPS mode: your own backend validates, stores, and emails via SMTP.
-        await axios.post(BACKEND_ENDPOINT, form);
+        await axios.post(BACKEND_ENDPOINT, payload);
       } else {
         // Static mode (GitHub Pages): Web3Forms turns the inquiry into an email.
         if (!WEB3FORMS_KEY || WEB3FORMS_KEY.includes("your-access-key")) {
@@ -126,17 +143,19 @@ export default function Contact() {
           WEB3FORMS_ENDPOINT,
           {
             access_key: WEB3FORMS_KEY,
-            subject: `Project inquiry (${form.projectType || "General"}) from ${form.name}`,
+            subject: `Project inquiry (${payload.projectType || "General"}) from ${payload.name}`,
             from_name: "RomanoGalvan.com Inquiry Form",
-            name: form.name,
-            email: form.email,
-            company: form.company || "—",
-            country: form.country || "—",
-            project_type: form.projectType || "Not specified",
-            budget: form.budget || "Not specified",
-            timeline: form.timeline || "Not specified",
-            preferred_contact: form.contactMethod || "Email",
-            message: form.message,
+            name: payload.name,
+            email: payload.email,
+            company: payload.company || "—",
+            country: payload.country || "—",
+            project_type: payload.projectType || "Not specified",
+            budget: payload.budget || "Not specified",
+            budget_currency: payload.budgetCurrency,
+            detected_country: payload.detectedCountry,
+            timeline: payload.timeline || "Not specified",
+            preferred_contact: payload.contactMethod || "Email",
+            message: payload.message,
             botcheck: "", // Web3Forms' own bot trap (always empty for humans)
           },
           { headers: { "Content-Type": "application/json", Accept: "application/json" } }
@@ -246,9 +265,9 @@ export default function Contact() {
                 </div>
                 <div>
                   <label htmlFor="inq-budget" className={labelCls}>Estimated budget</label>
-                  <select id="inq-budget" data-testid="inquiry-budget-select" name="budget" value={form.budget} onChange={update} className={inputCls}>
-                    <option value="">Select…</option>
-                    {BUDGETS.map((b) => <option key={b} value={b}>{b}</option>)}
+                  <select id="inq-budget" data-testid="inquiry-budget-select" name="budget" value={form.budget} onChange={update} disabled={!currency} className={inputCls}>
+                    <option value="">{currency ? "Select…" : "Detecting your region…"}</option>
+                    {budgets.map((b) => <option key={b} value={b}>{b}</option>)}
                   </select>
                 </div>
                 <div>
