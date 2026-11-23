@@ -56,8 +56,9 @@ const shapeTwist = (u, v, target) => {
 };
 
 const SHAPES = [shapeLoop, shapeWave, shapeTwist];
-const HOLD_SECONDS = 4;   // admire each shape
-const MORPH_SECONDS = 2;  // melt into the next
+// The shape-shift melts continuously at the same unhurried pace as the
+// rotation — no pauses, no jumps, just a slow liquid drift between forms.
+const MORPH_SECONDS_PER_SHAPE = 12;
 
 // The gold ribbon keeps its own steady curve (the constant in the piece)
 const goldRibbonPoint = (u, v, target) => {
@@ -136,11 +137,13 @@ function Sculpture({ dark, isMobile }) {
     // Scale entrance
     g.scale.setScalar((isMobile ? 0.9 : 1.02) * (0.86 + 0.14 * enter));
 
-    // ---- The shape-shift: blend the center form toward the next shape ----
+    // ---- The shape-shift: a slow, continuous melt between forms ----
     const t = state.clock.elapsedTime;
-    const cycle = HOLD_SECONDS + MORPH_SECONDS;
-    const seg = Math.floor(t / cycle) % SHAPES.length;
-    const k = THREE.MathUtils.smoothstep(t % cycle, HOLD_SECONDS, cycle);
+    const phase = t / MORPH_SECONDS_PER_SHAPE;
+    const seg = Math.floor(phase) % SHAPES.length;
+    const local = phase % 1;
+    // Cosine ease-in-out: the blend never stops or snaps, just drifts
+    const k = 0.5 - 0.5 * Math.cos(local * Math.PI);
     const from = shapePositions[seg];
     const to = shapePositions[(seg + 1) % SHAPES.length];
     const pos = morphGeo.attributes.position.array;
