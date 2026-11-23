@@ -50,4 +50,4 @@ A personal portfolio website (more website than web app) for Romano Galvan, a vi
 1. Owner approval of preview
 2. Web3Forms key via GitHub secret
 3. Custom domain setup
-4. Publish only after explicit approval
+4. Publish only after explicit approval — migration checklist ready at /app/GITHUB_PAGES_MIGRATION.md
