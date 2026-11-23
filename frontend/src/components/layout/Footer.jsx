@@ -26,8 +26,10 @@ export default function Footer() {
               <span className="uppercase">
                 RomanoGalvan<span className="text-accent">.COM</span>
               </span>
-              <span className="mono mt-0.5 text-[8px] font-normal tracking-[0.16em] text-muted-foreground">
-                PREMIUM WEB EXPERIENCES. POWERFUL DIGITAL SOLUTIONS.
+              <span className="mono mt-0.5 text-[8px] font-normal leading-snug tracking-[0.16em] text-muted-foreground">
+                PREMIUM WEB EXPERIENCES.
+                <br />
+                POWERFUL DIGITAL SOLUTIONS.
               </span>
             </span>
           </p>

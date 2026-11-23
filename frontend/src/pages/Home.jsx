@@ -78,7 +78,7 @@ export default function Home({ dark }) {
             <Reveal delay={0.08}>
               <h1
                 data-testid="hero-headline"
-                className="font-display mt-6 text-5xl sm:text-6xl lg:text-[4.4rem] leading-[1.05] tracking-tight"
+                className="font-display mt-6 text-[2.45rem] sm:text-6xl lg:text-[4.4rem] leading-[1.08] tracking-tight"
               >
                 Beyond the ordinary.
                 <br />
