@@ -5,33 +5,73 @@ import { Float, Environment, Lightformer, ContactShadows } from "@react-three/dr
 import { ParametricGeometry } from "three/examples/jsm/geometries/ParametricGeometry.js";
 
 // ---------------------------------------------------------------
-// "Meridian II" — the signature sculptural centerpiece.
-// Two intertwined fluid-metal ribbons — one polished platinum, one
-// champagne gold — generated from custom mathematical curves (no
-// stock shapes, no model downloads), orbited by a few deliberately
-// placed polished satellite elements. In plain words:
-//   - It fades in gently as the page loads (lights "turn up")
-//   - It floats and rotates slowly, leaning toward the cursor
-//   - As you scroll away from the hero, it keeps rotating and the
-//     camera drifts — a quiet farewell, then the page takes over
-// The studio "lighting" is drawn in code and changes with the theme:
-// warm champagne studio in light mode, cinematic silver in dark.
+// "Meridian III" — the signature sculptural centerpiece.
+// A champagne-gold ribbon holds the composition together while the
+// central PLATINUM form continuously shifts shape — flowing between
+// a loop, a wave and a rising twist, like liquid metal deciding what
+// it wants to be. Small polished orbs orbit the whole piece.
+//   - Fades in gently as the page loads (lights "turn up")
+//   - Floats and rotates slowly, leaning toward the cursor
+//   - Keeps rotating as you scroll away, camera drifts after it
+// The studio "lighting" is drawn in code and changes with the theme.
 // ---------------------------------------------------------------
 
-// The flowing ribbon shape. "phase" shifts the second ribbon so the
-// two bands interweave instead of overlapping.
-const makeRibbonPoint = (phase) => (u, v, target) => {
-  const t = u * Math.PI * 2 + phase;
+// --- The three shapes the center form cycles through ------------
+// (all share the same grid size so the mesh can morph smoothly)
+
+// Shape 1: the flowing loop ribbon
+const shapeLoop = (u, v, target) => {
+  const t = u * Math.PI * 2;
   const w = (v - 0.5) * 0.7;
-  const r = 1.25 + 0.3 * Math.sin(3 * t + phase);
+  const r = 1.25 + 0.3 * Math.sin(3 * t);
   target.set(
-    r * Math.cos(t) + w * Math.cos(2 * t + phase),
-    0.6 * Math.sin(2 * t) + w * Math.sin(t + phase) + (phase ? 0.15 : -0.1),
+    r * Math.cos(t) + w * Math.cos(2 * t),
+    0.6 * Math.sin(2 * t) + w * Math.sin(t) - 0.1,
     0.8 * r * Math.sin(t) + w * Math.sin(3 * t)
   );
 };
 
-// Where the small satellite elements sit — fixed, art-directed positions.
+// Shape 2: a wide, gently rippling wave ring
+const shapeWave = (u, v, target) => {
+  const t = u * Math.PI * 2;
+  const w = (v - 0.5) * 1.4;
+  const r = 1.3;
+  target.set(
+    r * Math.cos(t) + w * Math.cos(t),
+    0.25 * Math.sin(4 * t) + w * 0.4 * Math.sin(3 * t),
+    r * Math.sin(t) + w * Math.sin(t)
+  );
+};
+
+// Shape 3: a rising vertical twist
+const shapeTwist = (u, v, target) => {
+  const t = u * Math.PI * 2;
+  const w = (v - 0.5) * 0.8;
+  const r = 0.9 + 0.15 * Math.sin(2 * t);
+  target.set(
+    r * Math.cos(t) + w * Math.cos(t + 1.2),
+    (u - 0.5) * 2.2 + w * Math.sin(t),
+    r * Math.sin(t) + w * Math.sin(t + 1.2)
+  );
+};
+
+const SHAPES = [shapeLoop, shapeWave, shapeTwist];
+const HOLD_SECONDS = 4;   // admire each shape
+const MORPH_SECONDS = 2;  // melt into the next
+
+// The gold ribbon keeps its own steady curve (the constant in the piece)
+const goldRibbonPoint = (u, v, target) => {
+  const t = u * Math.PI * 2 + 1.9;
+  const w = (v - 0.5) * 0.7;
+  const r = 1.25 + 0.3 * Math.sin(3 * t + 1.9);
+  target.set(
+    r * Math.cos(t) + w * Math.cos(2 * t + 1.9),
+    0.6 * Math.sin(2 * t) + w * Math.sin(t + 1.9) + 0.15,
+    0.8 * r * Math.sin(t) + w * Math.sin(3 * t)
+  );
+};
+
+// Where the small orbiting elements sit — fixed, art-directed positions.
 const SATELLITES = [
   { pos: [1.9, 0.9, -0.6], size: 0.13, gold: true, speed: 1.8 },
   { pos: [-1.7, -0.8, 0.4], size: 0.1, gold: false, speed: 1.3 },
@@ -40,14 +80,34 @@ const SATELLITES = [
 
 function Sculpture({ dark, isMobile }) {
   const group = useRef();
+  const morphMesh = useRef();
+  const frameSkip = useRef(0);
 
-  // Build both ribbons once (fewer polygons on mobile = smoother)
-  const platinumRibbon = useMemo(
-    () => new ParametricGeometry(makeRibbonPoint(0), isMobile ? 110 : 200, isMobile ? 12 : 20),
-    [isMobile]
+  const gridU = isMobile ? 110 : 200;
+  const gridV = isMobile ? 12 : 20;
+
+  // Precompute every shape's vertex positions once (morph = blend between them)
+  const shapePositions = useMemo(
+    () =>
+      SHAPES.map((fn) =>
+        new ParametricGeometry(fn, gridU, gridV).attributes.position.array.slice()
+      ),
+    [gridU, gridV]
   );
+
+  // The morphable platinum mesh, starting as the loop shape
+  const morphGeo = useMemo(() => {
+    const base = new ParametricGeometry(shapeLoop, gridU, gridV);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(base.attributes.position.array.slice(), 3));
+    g.setAttribute("uv", base.attributes.uv);
+    g.setIndex(base.index);
+    g.computeVertexNormals();
+    return g;
+  }, [gridU, gridV]);
+
   const goldRibbon = useMemo(
-    () => new ParametricGeometry(makeRibbonPoint(1.9), isMobile ? 100 : 180, isMobile ? 12 : 18),
+    () => new ParametricGeometry(goldRibbonPoint, isMobile ? 100 : 180, isMobile ? 12 : 18),
     [isMobile]
   );
 
@@ -55,7 +115,7 @@ function Sculpture({ dark, isMobile }) {
     const g = group.current;
     if (!g) return;
 
-    // Entrance: the whole composition eases in over the first ~1.8 seconds
+    // Entrance: the composition eases in over the first ~1.8 seconds
     const enter = THREE.MathUtils.smoothstep(state.clock.elapsedTime, 0, 1.8);
 
     // Scroll progress through the hero (0 = top, 1 = hero left behind)
@@ -75,14 +135,31 @@ function Sculpture({ dark, isMobile }) {
 
     // Scale entrance
     g.scale.setScalar((isMobile ? 0.9 : 1.02) * (0.86 + 0.14 * enter));
+
+    // ---- The shape-shift: blend the center form toward the next shape ----
+    const t = state.clock.elapsedTime;
+    const cycle = HOLD_SECONDS + MORPH_SECONDS;
+    const seg = Math.floor(t / cycle) % SHAPES.length;
+    const k = THREE.MathUtils.smoothstep(t % cycle, HOLD_SECONDS, cycle);
+    const from = shapePositions[seg];
+    const to = shapePositions[(seg + 1) % SHAPES.length];
+    const pos = morphGeo.attributes.position.array;
+    for (let i = 0; i < pos.length; i++) {
+      pos[i] = from[i] + (to[i] - from[i]) * k;
+    }
+    morphGeo.attributes.position.needsUpdate = true;
+    // Recomputing lighting normals each frame is skipped on alternate
+    // frames on mobile to keep small GPUs cool
+    frameSkip.current++;
+    if (!isMobile || frameSkip.current % 2 === 0) morphGeo.computeVertexNormals();
   });
 
   return (
     // Float adds a soft vertical bob on top of everything else
     <Float speed={1.2} rotationIntensity={0.22} floatIntensity={0.7}>
       <group ref={group}>
-        {/* Polished platinum ribbon */}
-        <mesh geometry={platinumRibbon}>
+        {/* The shape-shifting platinum centerpiece */}
+        <mesh ref={morphMesh} geometry={morphGeo}>
           <meshPhysicalMaterial
             color={dark ? "#dcdcdc" : "#e4e4e4"}
             metalness={1}
@@ -93,7 +170,7 @@ function Sculpture({ dark, isMobile }) {
             side={THREE.DoubleSide}
           />
         </mesh>
-        {/* Champagne-gold ribbon, interwoven */}
+        {/* Champagne-gold ribbon, the constant interwoven counterpoint */}
         <mesh geometry={goldRibbon}>
           <meshPhysicalMaterial
             color={dark ? "#d4b47f" : "#c7a46a"}
@@ -105,7 +182,7 @@ function Sculpture({ dark, isMobile }) {
             side={THREE.DoubleSide}
           />
         </mesh>
-        {/* Deliberately placed satellite elements — small polished beads */}
+        {/* The orbiting orbs you liked — unchanged */}
         {SATELLITES.map((sat, i) => (
           <Float key={i} speed={sat.speed} rotationIntensity={0.4} floatIntensity={1.4}>
             <mesh position={sat.pos}>
