@@ -86,6 +86,20 @@ GitHub Pages supports custom domains for free (e.g. `romanogalvan.com`):
 **Settings → Pages → Custom domain**, then point your domain's DNS to GitHub.
 Ask me for a step-by-step when you're ready.
 
+## Production configuration requirements (GitHub Pages)
+
+These live OUTSIDE the code, in your GitHub repository settings:
+
+| Setting | Where | Type | Value |
+|---|---|---|---|
+| `REACT_APP_WEB3FORMS_ACCESS_KEY` | Settings → Secrets and variables → Actions | **Secret** | Your Web3Forms key |
+| `REACT_APP_GEO_ENDPOINT` | Settings → Secrets and variables → Actions | **Variable** | `https://geo-country.romanogalvan.workers.dev` |
+
+- The workflow (`.github/workflows/deploy.yml`) already injects both at build time.
+- The Cloudflare Worker is already deployed — no server to run.
+- `?cc=` testing overrides are automatically disabled on romanogalvan.com.
+- Nothing here publishes the site by itself; publishing happens when you push and Pages is set to "GitHub Actions".
+
 ## Troubleshooting
 
 - **Actions run failed?** Open the failed run in the Actions tab and click
