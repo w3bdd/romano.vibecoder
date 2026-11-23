@@ -3,17 +3,84 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#0A0A0C" />
-        <!-- SEO basics: what shows up in Google results and social link previews -->
-        <meta name="description" content="Romano Galvan — Vibe Coder & freelance web developer in Bamban, Tarlac, Philippines. Ultra-fast, motion-led websites and web apps for founders and brands. Contact via email or WhatsApp." />
-        <meta name="keywords" content="Romano Galvan, vibe coder, freelance web developer, Philippines, React developer, landing pages, web apps" />
-        <meta property="og:title" content="Romano Galvan — Vibe Coder & Freelance Web Developer" />
-        <meta property="og:description" content="I build vibey, high-velocity web experiences. Ultra-fast, motion-driven sites for bold founders and modern brands." />
+        <meta name="theme-color" content="#111111" />
+        <!-- Applies the saved theme (or the visitor's OS preference on a first
+             visit) BEFORE anything paints, so there's no flash of wrong colors -->
+        <script>
+            (function () {
+                try {
+                    var saved = localStorage.getItem("rg-theme");
+                    var dark = saved
+                        ? saved === "dark"
+                        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+                    if (dark) document.documentElement.classList.add("dark");
+                } catch (e) {}
+            })();
+        </script>
+        <!-- Restores deep links saved by 404.html (GitHub Pages helper) -->
+        <script>
+            (function (l) {
+                if (l.search[1] === "/") {
+                    var decoded = l.search
+                        .slice(1)
+                        .split("&")
+                        .map(function (s) { return s.replace(/~and~/g, "&"); })
+                        .join("?");
+                    window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+                }
+            })(window.location);
+        </script>
+        <!-- Optional analytics: only active when REACT_APP_GA_ID is set at build time -->
+        <script>
+            (function () {
+                var id = "%REACT_APP_GA_ID%";
+                if (id && id.charAt(0) !== "%") {
+                    var s = document.createElement("script");
+                    s.async = true;
+                    s.src = "https://www.googletagmanager.com/gtag/js?id=" + id;
+                    document.head.appendChild(s);
+                    window.dataLayer = window.dataLayer || [];
+                    window.gtag = function () { window.dataLayer.push(arguments); };
+                    window.gtag("js", new Date());
+                    window.gtag("config", id);
+                }
+            })();
+        </script>
+        <!-- SEO: defaults for the homepage (each page updates these as it loads) -->
+        <meta name="description" content="Premium web development, custom web applications and interactive 3D website experiences for Philippine and international businesses." />
+        <meta property="og:title" content="RomanoGalvan.com | Web Development & Digital Solutions" />
+        <meta property="og:description" content="Premium web development, custom web applications and interactive 3D website experiences for Philippine and international businesses." />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://romanogalvan.com/" />
         <meta name="twitter:card" content="summary_large_image" />
+        <link rel="canonical" href="https://romanogalvan.com/" />
+        <!-- Structured data: tells search engines what this business is -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "ProfessionalService",
+                "name": "RomanoGalvan.com",
+                "description": "Independent web development and digital solutions practice creating premium websites, custom web applications and interactive 3D experiences.",
+                "url": "https://romanogalvan.com",
+                "email": "romano.vibecoder@gmail.com",
+                "telephone": "+63 991 684 8388",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "Bamban",
+                    "addressRegion": "Tarlac",
+                    "postalCode": "2317",
+                    "addressCountry": "PH"
+                },
+                "sameAs": [
+                    "https://www.facebook.com/romano.vibecoder",
+                    "https://github.com/w3bdd",
+                    "https://www.linkedin.com/in/vibecoder4117"
+                ]
+            }
+        </script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
         <!--
         manifest.json provides metadata used when your web app is installed on a
         user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -27,7 +94,7 @@
         work correctly both with client-side routing and a non-root public URL.
         Learn how to configure a non-root public URL by running `npm run build`.
         -->
-        <title>Romano Galvan — Vibe Coder & Freelance Web Developer</title>
+        <title>RomanoGalvan.com | Web Development & Digital Solutions</title>
         <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
         <script src="https://assets.emergent.sh/scripts/emergent-main.js"></script>
     </head>

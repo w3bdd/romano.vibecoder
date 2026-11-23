@@ -1,42 +1,45 @@
-# PRD — Romano Galvan: Vibe Coder Portfolio
+# PRD — RomanoGalvan.com: Premium Web Development Practice
 
-## Original Problem Statement
-A personal portfolio website (more website than web app) for Romano Galvan, a vibe coder / freelance web developer in Bamban, Tarlac, Philippines (2317). Goal: showcase profile, services, selected work, and convert visitors via email contact form (to romano.vibecoder@gmail.com, sent through his private SMTP mail server) and WhatsApp click-to-chat (+63 991 684 8388). Requirements: animated premium neo-brutalist kinetic design (minimalist, motion-led), light/dark mode toggle, fast loading, secure form, responsive, basic SEO, layman's-term code comments (user deploys on own VPS), auto-generated content/assets.
+## Original Problem Statement (v2 redesign, 2026-11-23)
+Transform the existing portfolio into RomanoGalvan.com — a premium, conversion-focused business website: "Minimalist 3D Luxury" design with switchable light/dark mode, chrome 3D hero sculpture, six pages (Home, Services, Portfolio, Pricing, About, Contact) with approved business copy, PHP pricing (USD reference), full project inquiry form + FAQ, complete SEO layer, no invented claims, no publishing without approval.
+
+## Original Problem Statement (v1, original build)
+A personal portfolio website (more website than web app) for Romano Galvan, a vibe coder / freelance web developer in Bamban, Tarlac, Philippines (2317). Contact via email + WhatsApp. Neo-brutalist kinetic design. (Superseded by v2 redesign.)
 
 ## User Personas
 - Potential clients evaluating a freelance developer
 - Founders looking for contract/freelance web help
 - Visitors reviewing work before contacting
 
-## Architecture
-- Frontend: React (CRA/craco) + Tailwind + framer-motion + lenis, single-page, sections in `/app/frontend/src/components/portfolio/`
-- Backend: FastAPI at `/api` — POST `/api/contact` (validation, honeypot, 5/hr per-IP rate limit, MongoDB backup, SMTP forward via env config)
-- DB: MongoDB (MONGO_URL env) — `contact_messages` collection
-- Theme: CSS variables, `.dark` class on `<html>`, persisted in localStorage (`rg-theme`), default dark
-- Design system: `/app/design_guidelines.json` (Neo-Brutalist Kinetic Minimalist: Syne / Plus Jakarta Sans / JetBrains Mono; light = paper/orange, dark = ink/terminal-green)
+## Architecture (v2)
+- Frontend: React (CRA/craco) + react-router-dom (6 pages), Tailwind, framer-motion (reveals), lenis (smooth scroll), Three.js via @react-three/fiber + drei (chrome torus-knot hero, lazy-loaded, procedural Lightformer studio env, no external HDR), sonner toasts
+- Theme: flash-free boot script in index.html (localStorage rg-theme → OS preference), `.dark` class on <html>, palettes per brand spec (light #F5F3EF ivory / dark #111111 studio, metallic #C5C5C5/#D5D5D5), Fraunces + Manrope + JetBrains Mono
+- 3D guards: reduced-motion → static metallic disc fallback; no WebGL → same fallback; mobile → lower geometry + dpr cap
+- Pages: / /services /portfolio /pricing /about /contact — Seo.jsx sets per-page title/description/canonical/OG; sitemap.xml + robots.txt + JSON-LD ProfessionalService in index.html; 404.html deep-link helper (pathSegmentsToKeep=1, set 0 for custom domain)
+- Config: ALL business info + pricing in /app/frontend/src/config/business.js
+- Backend: FastAPI /api/contact — extended inquiry model (company, country, projectType, timeline, contactMethod), honeypot, 5/hr rate limit, MongoDB contact_messages, SMTP forward (placeholder creds)
+- Contact form: dual-mode — web3forms (default, key via GitHub secret at build) / smtp (VPS)
+- Deploy: GitHub Actions /app/.github/workflows/deploy.yml (structure auto-detect, no fragile cache path) + gh-pages script + VPS kit (/app/deploy/)
 
-## Implemented (2026-07-17... build date: current session)
-- Kinetic hero: masked line-by-line headline reveal, 3D mouse-tilt terminal card with self-typing two-act coding animation (intro → build/deploy loop), parallax accent blob, lightweight canvas "code rain" backdrop, availability badge, live GMT+8 clock
-- Editorial marquee ribbon (pure CSS, pause on hover)
-- Services matrix (4 cards, neo-brutalist hard shadows, tag pills)
-- Manifesto/about in 3 numbered chapters with sticky left column
-- Selected work: 4 SAMPLE project cards with CSS-only artwork + outcome strips (content is placeholder — user to replace with real work)
-- Contact: validated form + toast feedback, copy-email button, WhatsApp click-to-chat
-- Sticky bottom CTA pill, mobile hamburger nav, light/dark toggle
-- SEO: title, meta description, keywords, Open Graph, Twitter card
-- STATIC-READY for GitHub Pages: contact form posts directly to Web3Forms API (https://api.web3forms.com/submit) → emails romano.vibecoder@gmail.com. Key injected at build time from GitHub repo secret REACT_APP_WEB3FORMS_ACCESS_KEY via Actions workflow /app/.github/workflows/deploy.yml (owner declined to share key; creates it themselves at web3forms.com). package.json has homepage:"." + gh-pages deploy scripts as local fallback. Guide: /app/DEPLOY_GITHUB_PAGES.md
-- VPS-READY: contact form is dual-mode via REACT_APP_CONTACT_MODE ("formsubmit" for static hosting, "smtp" for VPS → posts to own FastAPI /api/contact which emails via private SMTP server). Deploy kit: /app/deploy/nginx.conf (static files + /api proxy + caching + security headers), /app/deploy/portfolio-backend.service (systemd auto-restart), full layman guide /app/DEPLOY_VPS.md (Ubuntu: Node/Python/MongoDB/Nginx/Certbot, .env SMTP setup, firewall, testing, troubleshooting)
-- Backend (kept for future VPS use): /api/contact with spam guards; SMTP delivery ready but PLACEHOLDER credentials in /app/backend/.env
+## Implemented (v2, 2026-11-23)
+- Six-page site with approved copy: Home (3D chrome hero, intro, services overview, why-us, 6-step process, CTA), Services (4 services + deliverables), Portfolio (4 real sample projects, labeled self-initiated demonstration work, live links), Pricing (4 packages PHP + USD reference toggle, disclaimer, custom app quote card), About (story, philosophy, commitment, founder portrait), Contact (9-field inquiry form, direct email/WhatsApp links, 8-question FAQ accordion)
+- Full SEO layer: per-page titles/descriptions/canonical/OG, sitemap.xml, robots.txt, JSON-LD structured data, optional GA4 via %REACT_APP_GA_ID% build var
+- Theme: light/dark switcher in nav, OS-preference first visit, localStorage persist, no flash, smooth transitions, 3D scene lighting is theme-aware
+- Backend extended for full inquiry fields; honeypot + rate limit preserved; success toast only on confirmed delivery
+- Old neo-brutalist single-page components removed (replaced by this redesign)
+
+## Implemented (v1, earlier sessions — superseded)
+- Neo-brutalist single-page portfolio (hero/terminal/marquee/manifesto), portrait optimization (89KB WebP, reused on About), Web3Forms static form pipeline, GitHub Pages workflow + secrets guide, VPS deploy kit, GitHub/LinkedIn/Facebook links
 
 ## Prioritized Backlog
-- P0: User adds real SMTP credentials to backend/.env (SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_FROM) → form emails start landing in romano.vibecoder@gmail.com
-- P0: Replace 4 sample projects with real case studies/links
-- P1: Real social profile URLs in footer (currently placeholder github/linkedin links)
-- P1: Custom domain + VPS deployment guide (build React, serve via Nginx, uvicorn behind reverse proxy, HTTPS via Certbot)
-- P2: Testimonials section, blog/writing section, OG share image, analytics
+- P0: Owner creates Web3Forms key (web3forms.com, romano.vibecoder@gmail.com) → adds GitHub secret REACT_APP_WEB3FORMS_ACCESS_KEY → inquiry form goes live on static hosting
+- P0: Owner reviews redesigned site in preview and approves before any production publishing
+- P1: Point romanogalvan.com domain (custom domain on GitHub Pages or VPS); set 404.html pathSegmentsToKeep=0 when on root domain
+- P1: VPS SMTP path: fill real mail credentials in backend/.env, set REACT_APP_CONTACT_MODE=smtp
+- P2: Real screenshots for portfolio cards; Google Maps embed on Contact; optional GA4 id
 
 ## Next Tasks
-1. Collect SMTP credentials from user and verify live email delivery
-2. Swap sample projects for real portfolio pieces
-3. Add real social links
-4. VPS deploy walkthrough
+1. Owner approval of preview
+2. Web3Forms key via GitHub secret
+3. Custom domain setup
+4. Publish only after explicit approval

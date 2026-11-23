@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>RomanoGalvan.com</title>
+        <!-- GitHub Pages serves this file for any URL it doesn't recognise
+             (like a direct visit to /pricing). We remember where the visitor
+             wanted to go, send them to the app, and index.html restores the
+             route — so deep links work on a static host. -->
+        <script>
+            // If the site runs from a subpath (username.github.io/repo-name),
+            // keep that first segment. On a custom domain, set this to 0.
+            var pathSegmentsToKeep = 1;
+
+            var l = window.location;
+            var base = l.pathname.split("/").slice(0, 1 + pathSegmentsToKeep).join("/");
+            var route = l.pathname
+                .slice(base.length)
+                .split("/")
+                .map(encodeURIComponent)
+                .join("/");
+            var q =
+                l.search.length > 1
+                    ? "&" + l.search.slice(1).replace(/&/g, "~and~")
+                    : "";
+            window.location.replace(
+                l.protocol +
+                    "//" +
+                    l.hostname +
+                    (l.port ? ":" + l.port : "") +
+                    base +
+                    "/?" +
+                    route +
+                    q +
+                    l.hash
+            );
+        </script>
+    </head>
+    <body></body>
+</html>

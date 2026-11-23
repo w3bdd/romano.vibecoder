@@ -45,11 +45,16 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 
-# --- What a contact message looks like ---------------------------
+# --- What a project inquiry looks like -------------------------
 class ContactMessage(BaseModel):
     name: str = Field(min_length=2, max_length=100)
     email: EmailStr                      # checks the address looks like a real email
+    company: str = Field(default="", max_length=120)
+    country: str = Field(default="", max_length=80)
+    projectType: str = Field(default="Not specified", max_length=60)
     budget: str = Field(default="Not specified", max_length=60)
+    timeline: str = Field(default="Not specified", max_length=60)
+    contactMethod: str = Field(default="Email", max_length=30)
     message: str = Field(min_length=10, max_length=5000)
     website: str = ""                    # hidden trap field — humans never fill this in
 
@@ -71,15 +76,20 @@ def deliver_email(msg: ContactMessage) -> bool:
         return False
 
     body = (
-        f"New portfolio enquiry\n"
-        f"---------------------\n"
-        f"Name:   {msg.name}\n"
-        f"Email:  {msg.email}\n"
-        f"Budget: {msg.budget}\n\n"
+        f"New project inquiry\n"
+        f"-------------------\n"
+        f"Name:     {msg.name}\n"
+        f"Email:    {msg.email}\n"
+        f"Company:  {msg.company or '—'}\n"
+        f"Country:  {msg.country or '—'}\n"
+        f"Type:     {msg.projectType}\n"
+        f"Budget:   {msg.budget}\n"
+        f"Timeline: {msg.timeline}\n"
+        f"Contact:  {msg.contactMethod}\n\n"
         f"{msg.message}\n"
     )
     mail = MIMEText(body, "plain", "utf-8")
-    mail["Subject"] = f"Portfolio enquiry from {msg.name}"
+    mail["Subject"] = f"Project inquiry ({msg.projectType}) from {msg.name}"
     mail["From"] = formataddr(("Portfolio Contact Form", SMTP_FROM))
     mail["To"] = CONTACT_RECEIVER
     mail["Reply-To"] = msg.email  # hit "Reply" in your inbox to answer the visitor
@@ -124,7 +134,12 @@ async def submit_contact(msg: ContactMessage, request: Request):
     doc = {
         "name": msg.name,
         "email": msg.email,
+        "company": msg.company,
+        "country": msg.country,
+        "projectType": msg.projectType,
         "budget": msg.budget,
+        "timeline": msg.timeline,
+        "contactMethod": msg.contactMethod,
         "message": msg.message,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
